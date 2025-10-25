@@ -1,0 +1,17 @@
+services:
+  docs:
+    image: healthy_herron_local_docs
+    container_name: healthy_herron_local_docs
+    build:
+      context: .
+      dockerfile: ./compose/local/docs/Dockerfile
+    env_file:
+      - ./.envs/.local/.django
+    volumes:
+      - /app/.venv
+      - ./docs:/docs:z
+      - ./config:/app/config:z
+      - ./healthy_herron:/app/healthy_herron:z
+    ports:
+      - '9000:9000'
+    command: /start-docs
