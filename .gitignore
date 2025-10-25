@@ -275,3 +275,4 @@ healthy_herron/media/
 .ipython/
 .env
 .envs/*
+output
