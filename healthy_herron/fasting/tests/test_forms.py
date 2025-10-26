@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.core.exceptions import ValidationError
 from datetime import timedelta
 
-from healthy_herron.fasting.forms import FastForm, EndFastForm
+from healthy_herron.fasting.forms import StartFastForm, EndFastForm
 from healthy_herron.fasting.models import Fast
 from healthy_herron.fasting.tests.factories import UserFactory, FastFactory
 
@@ -25,8 +25,8 @@ class FastFormTest(TestCase):
         form_data = {
             'start_time': timezone.now() - timedelta(hours=1)
         }
-        form = FastForm(data=form_data, user=self.user)
-        
+        form = StartFastForm(data=form_data, user=self.user)
+
         self.assertTrue(form.is_valid())
 
     def test_fast_form_future_start_time(self):
@@ -34,8 +34,8 @@ class FastFormTest(TestCase):
         form_data = {
             'start_time': timezone.now() + timedelta(hours=1)
         }
-        form = FastForm(data=form_data, user=self.user)
-        
+        form = StartFastForm(data=form_data, user=self.user)
+
         self.assertFalse(form.is_valid())
         self.assertIn('start_time', form.errors)
         self.assertIn('cannot be in the future', str(form.errors['start_time']))
@@ -45,8 +45,8 @@ class FastFormTest(TestCase):
         form_data = {
             'start_time': timezone.now() - timedelta(days=8)
         }
-        form = FastForm(data=form_data, user=self.user)
-        
+        form = StartFastForm(data=form_data, user=self.user)
+
         self.assertFalse(form.is_valid())
         self.assertIn('start_time', form.errors)
         self.assertIn('cannot be more than 7 days ago', str(form.errors['start_time']))
@@ -58,12 +58,12 @@ class FastFormTest(TestCase):
             user=self.user,
             start_time=timezone.now() - timedelta(hours=5)
         )
-        
+
         form_data = {
             'start_time': timezone.now() - timedelta(hours=1)
         }
-        form = FastForm(data=form_data, user=self.user)
-        
+        form = StartFastForm(data=form_data, user=self.user)
+
         self.assertFalse(form.is_valid())
         self.assertIn('__all__', form.errors)
         self.assertIn('already have an active fast', str(form.errors['__all__']))
@@ -71,8 +71,8 @@ class FastFormTest(TestCase):
     def test_fast_form_missing_start_time(self):
         """Test form with missing start time."""
         form_data = {}
-        form = FastForm(data=form_data, user=self.user)
-        
+        form = StartFastForm(data=form_data, user=self.user)
+
         self.assertFalse(form.is_valid())
         self.assertIn('start_time', form.errors)
 
@@ -81,8 +81,8 @@ class FastFormTest(TestCase):
         form_data = {
             'start_time': 'invalid-date'
         }
-        form = FastForm(data=form_data, user=self.user)
-        
+        form = StartFastForm(data=form_data, user=self.user)
+
         self.assertFalse(form.is_valid())
         self.assertIn('start_time', form.errors)
 
@@ -91,12 +91,12 @@ class FastFormTest(TestCase):
         form_data = {
             'start_time': timezone.now() - timedelta(hours=2)
         }
-        form = FastForm(data=form_data, user=self.user)
-        
+        form = StartFastForm(data=form_data, user=self.user)
+
         self.assertTrue(form.is_valid())
-        
+
         fast = form.save()
-        
+
         self.assertIsInstance(fast, Fast)
         self.assertEqual(fast.user, self.user)
         self.assertEqual(fast.start_time, form_data['start_time'])
@@ -105,23 +105,23 @@ class FastFormTest(TestCase):
 
     def test_fast_form_widget_attributes(self):
         """Test form widget attributes for proper rendering."""
-        form = FastForm(user=self.user)
-        
+        form = StartFastForm(user=self.user)
+
         start_time_widget = form.fields['start_time'].widget
         self.assertEqual(start_time_widget.input_type, 'datetime-local')
         self.assertIn('class', start_time_widget.attrs)
 
     def test_fast_form_help_text(self):
         """Test form help text."""
-        form = FastForm(user=self.user)
-        
+        form = StartFastForm(user=self.user)
+
         help_text = form.fields['start_time'].help_text
         self.assertIn('When did you start', help_text)
 
     def test_fast_form_label(self):
         """Test form field labels."""
-        form = FastForm(user=self.user)
-        
+        form = StartFastForm(user=self.user)
+
         self.assertEqual(form.fields['start_time'].label, 'Start Time')
 
 
@@ -144,7 +144,7 @@ class EndFastFormTest(TestCase):
             'comments': 'Felt great during this fast!'
         }
         form = EndFastForm(data=form_data, instance=self.fast)
-        
+
         self.assertTrue(form.is_valid())
 
     def test_end_fast_form_minimal_valid_data(self):
@@ -154,7 +154,7 @@ class EndFastFormTest(TestCase):
             'emotional_status': 'satisfied'
         }
         form = EndFastForm(data=form_data, instance=self.fast)
-        
+
         self.assertTrue(form.is_valid())
 
     def test_end_fast_form_missing_emotional_status(self):
@@ -164,7 +164,7 @@ class EndFastFormTest(TestCase):
             'comments': 'Test comment'
         }
         form = EndFastForm(data=form_data, instance=self.fast)
-        
+
         self.assertFalse(form.is_valid())
         self.assertIn('emotional_status', form.errors)
 
@@ -175,7 +175,7 @@ class EndFastFormTest(TestCase):
             'comments': 'Test comment'
         }
         form = EndFastForm(data=form_data, instance=self.fast)
-        
+
         self.assertFalse(form.is_valid())
         self.assertIn('end_time', form.errors)
 
@@ -186,7 +186,7 @@ class EndFastFormTest(TestCase):
             'emotional_status': 'satisfied'
         }
         form = EndFastForm(data=form_data, instance=self.fast)
-        
+
         self.assertFalse(form.is_valid())
         self.assertIn('end_time', form.errors)
         self.assertIn('cannot be before the start time', str(form.errors['end_time']))
@@ -198,7 +198,7 @@ class EndFastFormTest(TestCase):
             'emotional_status': 'satisfied'
         }
         form = EndFastForm(data=form_data, instance=self.fast)
-        
+
         self.assertFalse(form.is_valid())
         self.assertIn('end_time', form.errors)
         self.assertIn('cannot be in the future', str(form.errors['end_time']))
@@ -210,34 +210,34 @@ class EndFastFormTest(TestCase):
             'emotional_status': 'invalid_status'
         }
         form = EndFastForm(data=form_data, instance=self.fast)
-        
+
         self.assertFalse(form.is_valid())
         self.assertIn('emotional_status', form.errors)
 
     def test_end_fast_form_valid_emotional_statuses(self):
         """Test form with all valid emotional statuses."""
         valid_statuses = ['hungry', 'satisfied', 'energized', 'weak', 'focused']
-        
+
         for status in valid_statuses:
             form_data = {
                 'end_time': timezone.now(),
                 'emotional_status': status
             }
             form = EndFastForm(data=form_data, instance=self.fast)
-            
+
             self.assertTrue(form.is_valid(), f"Form should be valid for status: {status}")
 
     def test_end_fast_form_comments_max_length(self):
         """Test form with very long comments."""
         long_comment = 'A' * 1001  # Exceeds max_length of 1000
-        
+
         form_data = {
             'end_time': timezone.now(),
             'emotional_status': 'satisfied',
             'comments': long_comment
         }
         form = EndFastForm(data=form_data, instance=self.fast)
-        
+
         self.assertFalse(form.is_valid())
         self.assertIn('comments', form.errors)
 
@@ -248,7 +248,7 @@ class EndFastFormTest(TestCase):
             'emotional_status': 'satisfied'
         }
         form = EndFastForm(data=form_data, instance=self.fast)
-        
+
         self.assertTrue(form.is_valid())
 
     def test_end_fast_form_save(self):
@@ -260,11 +260,11 @@ class EndFastFormTest(TestCase):
             'comments': 'Great fast experience!'
         }
         form = EndFastForm(data=form_data, instance=self.fast)
-        
+
         self.assertTrue(form.is_valid())
-        
+
         saved_fast = form.save()
-        
+
         self.assertEqual(saved_fast.pk, self.fast.pk)
         self.assertEqual(saved_fast.end_time, end_time)
         self.assertEqual(saved_fast.emotional_status, 'energized')
@@ -273,16 +273,16 @@ class EndFastFormTest(TestCase):
     def test_end_fast_form_widget_attributes(self):
         """Test form widget attributes for proper rendering."""
         form = EndFastForm(instance=self.fast)
-        
+
         # Check end_time widget
         end_time_widget = form.fields['end_time'].widget
         self.assertEqual(end_time_widget.input_type, 'datetime-local')
         self.assertIn('class', end_time_widget.attrs)
-        
+
         # Check emotional_status widget
         emotional_status_widget = form.fields['emotional_status'].widget
         self.assertIn('class', emotional_status_widget.attrs)
-        
+
         # Check comments widget
         comments_widget = form.fields['comments'].widget
         self.assertIn('class', comments_widget.attrs)
@@ -291,20 +291,20 @@ class EndFastFormTest(TestCase):
     def test_end_fast_form_help_texts(self):
         """Test form help texts."""
         form = EndFastForm(instance=self.fast)
-        
+
         end_time_help = form.fields['end_time'].help_text
         self.assertIn('When did you end', end_time_help)
-        
+
         emotional_status_help = form.fields['emotional_status'].help_text
         self.assertIn('How did you feel', emotional_status_help)
-        
+
         comments_help = form.fields['comments'].help_text
         self.assertIn('Additional notes', comments_help)
 
     def test_end_fast_form_labels(self):
         """Test form field labels."""
         form = EndFastForm(instance=self.fast)
-        
+
         self.assertEqual(form.fields['end_time'].label, 'End Time')
         self.assertEqual(form.fields['emotional_status'].label, 'How did you feel?')
         self.assertEqual(form.fields['comments'].label, 'Comments')
@@ -312,10 +312,10 @@ class EndFastFormTest(TestCase):
     def test_end_fast_form_field_order(self):
         """Test form field order."""
         form = EndFastForm(instance=self.fast)
-        
+
         field_names = list(form.fields.keys())
         expected_order = ['end_time', 'emotional_status', 'comments']
-        
+
         self.assertEqual(field_names, expected_order)
 
     def test_end_fast_form_very_short_fast(self):
@@ -324,13 +324,13 @@ class EndFastFormTest(TestCase):
             user=self.user,
             start_time=timezone.now() - timedelta(minutes=15)
         )
-        
+
         form_data = {
             'end_time': timezone.now(),
             'emotional_status': 'satisfied'
         }
         form = EndFastForm(data=form_data, instance=short_fast)
-        
+
         self.assertFalse(form.is_valid())
         self.assertIn('__all__', form.errors)
         self.assertIn('must be at least 30 minutes', str(form.errors['__all__']))
@@ -341,13 +341,13 @@ class EndFastFormTest(TestCase):
             user=self.user,
             start_time=timezone.now() - timedelta(minutes=30)
         )
-        
+
         form_data = {
             'end_time': timezone.now(),
             'emotional_status': 'satisfied'
         }
         form = EndFastForm(data=form_data, instance=exact_fast)
-        
+
         self.assertTrue(form.is_valid())
 
     def test_end_fast_form_very_long_fast(self):
@@ -356,13 +356,13 @@ class EndFastFormTest(TestCase):
             user=self.user,
             start_time=timezone.now() - timedelta(days=8)
         )
-        
+
         form_data = {
             'end_time': timezone.now(),
             'emotional_status': 'satisfied'
         }
         form = EndFastForm(data=form_data, instance=long_fast)
-        
+
         # This should be valid - no upper limit on fast duration
         self.assertTrue(form.is_valid())
 
@@ -374,7 +374,7 @@ class EndFastFormTest(TestCase):
             'emotional_status': 'satisfied'
         }
         form = EndFastForm(data=form_data, instance=self.fast)
-        
+
         # This should call clean() and detect the validation error
         self.assertFalse(form.is_valid())
 
@@ -386,46 +386,46 @@ class EndFastFormTest(TestCase):
             end_time=timezone.now() - timedelta(hours=2),
             emotional_status='satisfied'
         )
-        
+
         form_data = {
             'end_time': timezone.now(),
             'emotional_status': 'energized',
             'comments': 'Updating ended fast'
         }
         form = EndFastForm(data=form_data, instance=ended_fast)
-        
+
         # This should be valid - allows editing already ended fasts
         self.assertTrue(form.is_valid())
 
     def test_end_fast_form_preserve_start_time(self):
         """Test that form doesn't change the start time."""
         original_start = self.fast.start_time
-        
+
         form_data = {
             'end_time': timezone.now(),
             'emotional_status': 'satisfied'
         }
         form = EndFastForm(data=form_data, instance=self.fast)
-        
+
         self.assertTrue(form.is_valid())
         saved_fast = form.save()
-        
+
         # Start time should remain unchanged
         self.assertEqual(saved_fast.start_time, original_start)
 
     def test_end_fast_form_preserve_user(self):
         """Test that form doesn't change the user."""
         original_user = self.fast.user
-        
+
         form_data = {
             'end_time': timezone.now(),
             'emotional_status': 'satisfied'
         }
         form = EndFastForm(data=form_data, instance=self.fast)
-        
+
         self.assertTrue(form.is_valid())
         saved_fast = form.save()
-        
+
         # User should remain unchanged
         self.assertEqual(saved_fast.user, original_user)
 
@@ -443,11 +443,11 @@ class FormIntegrationTest(TestCase):
         start_form_data = {
             'start_time': timezone.now() - timedelta(hours=16)
         }
-        start_form = FastForm(data=start_form_data, user=self.user)
-        
+        start_form = StartFastForm(data=start_form_data, user=self.user)
+
         self.assertTrue(start_form.is_valid())
         fast = start_form.save()
-        
+
         # End the fast
         end_form_data = {
             'end_time': timezone.now(),
@@ -455,10 +455,10 @@ class FormIntegrationTest(TestCase):
             'comments': 'Great experience!'
         }
         end_form = EndFastForm(data=end_form_data, instance=fast)
-        
+
         self.assertTrue(end_form.is_valid())
         ended_fast = end_form.save()
-        
+
         # Verify complete fast
         self.assertIsNotNone(ended_fast.end_time)
         self.assertEqual(ended_fast.emotional_status, 'energized')
@@ -472,20 +472,20 @@ class FormIntegrationTest(TestCase):
             user=self.user,
             start_time=timezone.now() - timedelta(hours=1)
         )
-        
+
         # Try to end with invalid end time
         invalid_end_data = {
             'end_time': fast.start_time - timedelta(minutes=30),  # Before start
             'emotional_status': 'satisfied'
         }
-        
+
         # Form validation should catch this
         form = EndFastForm(data=invalid_end_data, instance=fast)
         self.assertFalse(form.is_valid())
-        
+
         # If we somehow bypass form validation, model validation should also catch it
         fast.end_time = invalid_end_data['end_time']
         fast.emotional_status = invalid_end_data['emotional_status']
-        
+
         with self.assertRaises(ValidationError):
             fast.full_clean()

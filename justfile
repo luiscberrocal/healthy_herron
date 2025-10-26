@@ -33,6 +33,9 @@ prune *args:
 logs *args:
     @docker compose logs -f {{args}}
 
+test:
+    @docker compose run --rm django pytest
+    
 # manage: Executes `manage.py` command.
 manage +args:
     @docker compose run --rm django python ./manage.py {{args}}
