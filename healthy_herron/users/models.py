@@ -22,6 +22,14 @@ class User(AbstractUser):
     last_name = None  # type: ignore[assignment]
     email = EmailField(_("email address"), unique=True)
     username = None  # type: ignore[assignment]
+    
+    # Timezone field for fasting app
+    timezone = CharField(
+        _("Timezone"), 
+        max_length=50, 
+        default='UTC',
+        help_text=_("User's timezone for accurate fasting time tracking")
+    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []

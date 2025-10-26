@@ -23,6 +23,7 @@ urlpatterns = [
     path("users/", include("healthy_herron.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
+    path("fasting/", include("healthy_herron.fasting.urls", namespace="fasting")),
     # ...
     # Media files
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
