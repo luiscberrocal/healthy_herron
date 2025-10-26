@@ -898,7 +898,7 @@ requires-dist = [
     { name = "django-cors-headers", specifier = "==4.9.0" },
     { name = "django-crispy-forms", specifier = "==2.4" },
     { name = "django-environ", specifier = "==0.12.0" },
-    { name = "django-htmx", specifier = ">=1.26.0" },
+    { name = "django-htmx", specifier = "==1.26.0" },
     { name = "django-model-utils", specifier = "==5.0.0" },
     { name = "django-redis", specifier = "==6.0.0" },
     { name = "django-storages", extras = ["s3"], specifier = "==1.14.6" },
