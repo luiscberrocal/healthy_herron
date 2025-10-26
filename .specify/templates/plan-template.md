@@ -32,11 +32,12 @@
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
 - [ ] **Clean Code**: All code follows PEP 8, uses meaningful names, single responsibilities
-- [ ] **Simple UX**: User interfaces prioritize simplicity and usability  
+- [ ] **Simple UX**: User interfaces prioritize simplicity and usability, use HTMX for interactivity (no custom JavaScript)
 - [ ] **Responsive Design**: Full responsive design with Tailwind CSS, tested on multiple screen sizes
 - [ ] **Minimal Dependencies**: New dependencies justified, using existing libraries from pyproject.toml
 - [ ] **Django Best Practices**: Apps under healthy_herron package, models inherit from AuditableModel + TimeStampedModel, APIs in api package with class-based views
 - [ ] **Testing Standards**: Class-based pytest tests, FactoryBoy factories for all models
+- [ ] **Frontend Interaction Standards**: Use HTMX for all dynamic features, no custom JavaScript, progressive enhancement
 
 ## Project Structure
 
