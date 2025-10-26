@@ -17,7 +17,7 @@ A personal fasting tracker application allowing users to start/end fasting perio
 **Testing**: pytest with class-based tests and FactoryBoy  
 **Target Platform**: Web application (cross-platform responsive)
 **Project Type**: Django web application  
-**Performance Goals**: Medium scale (1000-10,000 users, up to 100,000 fast records), real-time HTMX updates every 1 second  
+**Performance Goals**: Medium scale (1000-10,000 users, up to 100,000 fast records), real-time HTMX updates every 15 seconds  
 **Constraints**: Responsive design mandatory, minimal dependencies, clean code standards, HTMX-only (no JavaScript), 128 character comment limit  
 **Scale/Scope**: Single-user fasting tracking with CRUD operations, real-time timer, historical analytics, timezone support, concurrency handling
 
