@@ -3,6 +3,7 @@
 Auto-generated from all feature plans. Last updated: 2025-10-25
 
 ## Active Technologies
+- PostgreSQL (configured in settings) (001-fasting-app)
 
 - Python 3.13 + Django 5.2.7, django-model-utils, django-guardian, Tailwind CSS, pytest, FactoryBoy (001-fasting-app)
 
@@ -23,6 +24,7 @@ cd src [ONLY COMMANDS FOR ACTIVE TECHNOLOGIES][ONLY COMMANDS FOR ACTIVE TECHNOLO
 Python 3.13: Follow standard conventions
 
 ## Recent Changes
+- 001-fasting-app: Added Python 3.13 + Django 5.2.7, django-model-utils, django-guardian, Tailwind CSS, pytest, FactoryBoy
 
 - 001-fasting-app: Added Python 3.13 + Django 5.2.7, django-model-utils, django-guardian, Tailwind CSS, pytest, FactoryBoy
 
