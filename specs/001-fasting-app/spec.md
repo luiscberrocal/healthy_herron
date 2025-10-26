@@ -52,10 +52,11 @@ A user wants to see their complete history of completed fasts to track their fas
 **Acceptance Scenarios**:
 
 1. **Given** a user with completed fasts, **When** they view their fasting history, **Then** they see all their fasts ordered by most recent first with start time, end time, duration, elapsed hours, emotional status, and comments
-2. **Given** a user with an active (ongoing) fast, **When** they view the fast details, **Then** they see the elapsed hours since the fast started updating in real-time or on page refresh
-3. **Given** a user viewing fast details, **When** they see completed fasts with emotional status, **Then** each fast displays the emotional state icon/badge and any comments provided
-4. **Given** a user with no fasting history, **When** they view the history page, **Then** they see a message encouraging them to start their first fast
-5. **Given** a user tries to view another user's fasting history, **When** they attempt access, **Then** they can only see their own fasts
+2. **Given** a user with an active (ongoing) fast, **When** they view the fast details, **Then** they see the elapsed hours updating automatically every 15 seconds without requiring page refresh
+3. **Given** a user viewing active fast details, **When** they remain on the page for at least 30 seconds, **Then** they observe the elapsed time increment automatically at 15-second intervals
+4. **Given** a user viewing fast details, **When** they see completed fasts with emotional status, **Then** each fast displays the emotional state icon/badge and any comments provided
+5. **Given** a user with no fasting history, **When** they view the history page, **Then** they see a message encouraging them to start their first fast
+6. **Given** a user tries to view another user's fasting history, **When** they attempt access, **Then** they can only see their own fasts
 
 ---
 
@@ -102,6 +103,10 @@ A user wants to remove a fast record from their history if it was recorded by mi
 - How does the system handle very long comments (character limits and validation)?
 - What happens if the predefined emotional states need to be updated or expanded in the future?
 - How are emotional status statistics and trends calculated over time?
+- What happens when the 15-second auto-update fails due to network connectivity issues?
+- How does the system handle browser tab switching or background tab behavior affecting real-time updates?
+- What happens if multiple browser tabs are open showing the same active fast details?
+- How does the system behave when the user's computer goes to sleep while viewing active fast details?
 
 ## Requirements *(mandatory)*
 
@@ -112,18 +117,19 @@ A user wants to remove a fast record from their history if it was recorded by mi
 - **FR-003**: System MUST prevent users from having multiple active (unfinished) fasts simultaneously
 - **FR-004**: System MUST calculate and display fasting duration when a fast is completed
 - **FR-005**: System MUST display elapsed hours for active fasts and completed fasts in detail views
-- **FR-006**: System MUST require emotional status selection when ending a fast from predefined options: Energized, Satisfied, Challenging, Difficult
-- **FR-007**: System MUST allow users to add optional comments when ending a fast for personal reflection
-- **FR-008**: System MUST display emotional status and comments in fast history and detail views
-- **FR-009**: System MUST allow editing of emotional status and comments for existing fast records
-- **FR-010**: System MUST provide complete CRUD operations (create, read, update, delete) for fast records
-- **FR-011**: System MUST restrict access so users can only view and modify their own fast records
-- **FR-012**: System MUST implement object-level permissions using django-guardian
-- **FR-013**: System MUST store templates in the fasting/templates directory following Django conventions
-- **FR-014**: System MUST display fasting history ordered by most recent first
-- **FR-015**: System MUST validate that fast end time is after start time
-- **FR-016**: System MUST require user authentication for all fasting operations
-- **FR-017**: System MUST provide user-friendly error messages for permission denials and validation failures
+- **FR-006**: System MUST update elapsed time automatically every 15 seconds for active fasts when viewing fast details
+- **FR-007**: System MUST require emotional status selection when ending a fast from predefined options: Energized, Satisfied, Challenging, Difficult
+- **FR-008**: System MUST allow users to add optional comments when ending a fast for personal reflection
+- **FR-009**: System MUST display emotional status and comments in fast history and detail views
+- **FR-010**: System MUST allow editing of emotional status and comments for existing fast records
+- **FR-011**: System MUST provide complete CRUD operations (create, read, update, delete) for fast records
+- **FR-012**: System MUST restrict access so users can only view and modify their own fast records
+- **FR-013**: System MUST implement object-level permissions using django-guardian
+- **FR-014**: System MUST store templates in the fasting/templates directory following Django conventions
+- **FR-015**: System MUST display fasting history ordered by most recent first
+- **FR-016**: System MUST validate that fast end time is after start time
+- **FR-017**: System MUST require user authentication for all fasting operations
+- **FR-018**: System MUST provide user-friendly error messages for permission denials and validation failures
 
 ### Key Entities
 
@@ -139,11 +145,12 @@ A user wants to remove a fast record from their history if it was recorded by mi
 - **SC-002**: Users can view their complete fasting history in under 3 seconds
 - **SC-003**: Fast duration calculations are accurate to the minute
 - **SC-004**: Elapsed hours for active fasts are displayed and calculated accurately in real-time
-- **SC-005**: Users can complete the end-fast process including emotional status selection in under 30 seconds
-- **SC-006**: Emotional status and comments are correctly saved and displayed for 100% of completed fasts
-- **SC-007**: 100% of fast records are properly isolated between users (no cross-user data access)
-- **SC-008**: System prevents creation of invalid fast records (end time before start time) with clear error messages
-- **SC-009**: All CRUD operations complete successfully for authorized users within 2 seconds
+- **SC-005**: Elapsed time updates automatically every 15 seconds (±2 seconds tolerance) for active fasts without user interaction
+- **SC-006**: Users can complete the end-fast process including emotional status selection in under 30 seconds
+- **SC-007**: Emotional status and comments are correctly saved and displayed for 100% of completed fasts
+- **SC-008**: 100% of fast records are properly isolated between users (no cross-user data access)
+- **SC-009**: System prevents creation of invalid fast records (end time before start time) with clear error messages
+- **SC-010**: All CRUD operations complete successfully for authorized users within 2 seconds
 
 ## Assumptions
 
@@ -157,3 +164,7 @@ A user wants to remove a fast record from their history if it was recorded by mi
 - Comments field will have reasonable character limits (500-1000 characters assumed)
 - Emotional status is required for completed fasts but comments remain optional
 - Users will find value in tracking emotional patterns alongside fasting duration data
+- Users will typically keep the fast details page open for extended periods during active fasts
+- JavaScript is enabled in user browsers to support real-time elapsed time updates
+- Network connectivity is generally stable for real-time updates (graceful degradation assumed for intermittent connectivity)
+- 15-second update interval provides good balance between real-time feel and server load

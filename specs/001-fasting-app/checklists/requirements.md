@@ -31,12 +31,16 @@
 
 ## Notes
 
-🔄 **SPECIFICATION UPDATED** - 2025-10-25: Added emotional status and comments functionality
+🔄 **SPECIFICATION UPDATED** - 2025-10-25: 
+- Initial version: Added emotional status and comments functionality
+- **Latest update**: Added real-time elapsed time updates every 15 seconds
 
 ✅ **RE-VALIDATION COMPLETE** - Enhanced specification maintains quality standards:
-- Added emotional tracking with 4 predefined states (Energized, Satisfied, Challenging, Difficult)
-- Added optional comments field for user reflection
-- Updated all affected user stories, functional requirements, and success criteria
-- Enhanced edge cases and assumptions
+- Added 15-second automatic elapsed time updates for active fasts
+- Enhanced User Story 3 with specific real-time update scenarios  
+- Added FR-006 for automatic elapsed time updates
+- Added SC-005 for real-time update performance criteria
+- Enhanced edge cases for network connectivity and browser behavior
+- Updated assumptions for JavaScript and real-time functionality
 
 Specification remains ready for `/speckit.clarify` or `/speckit.plan`.
