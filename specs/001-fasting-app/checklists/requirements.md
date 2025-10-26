@@ -33,14 +33,14 @@
 
 🔄 **SPECIFICATION UPDATED** - 2025-10-25: 
 - Initial version: Added emotional status and comments functionality
-- **Latest update**: Added real-time elapsed time updates every 15 seconds
+- **Constitution update**: Migrated from JavaScript to HTMX-only approach
 
-✅ **RE-VALIDATION COMPLETE** - Enhanced specification maintains quality standards:
-- Added 15-second automatic elapsed time updates for active fasts
-- Enhanced User Story 3 with specific real-time update scenarios  
-- Added FR-006 for automatic elapsed time updates
-- Added SC-005 for real-time update performance criteria
-- Enhanced edge cases for network connectivity and browser behavior
-- Updated assumptions for JavaScript and real-time functionality
+✅ **RE-VALIDATION COMPLETE** - Updated specification aligns with constitution v1.2.0:
+- Replaced JavaScript references with HTMX for all interactive features
+- Added FR-023 mandating HTMX exclusive usage (no custom JavaScript)
+- Updated acceptance scenarios to specify HTMX polling approach
+- Enhanced success criteria to clarify HTMX-based real-time updates
+- Updated assumptions to reflect HTMX dependency instead of JavaScript
+- Maintained 15-second update intervals using HTMX polling mechanism
 
 Specification remains ready for `/speckit.clarify` or `/speckit.plan`.
