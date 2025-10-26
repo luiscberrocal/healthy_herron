@@ -1,9 +1,24 @@
-# Feature Specification: Fasting Tracker App
+# Feature### Session 2025-10-25
+
+- Q: What is the expected scale for this fasting app in terms of users and data volume? → A: Medium scale (1000-10,000 users, up to 100,000 fast records)
+- Q: What should be the exact character limit for user comments when ending a fast? → A: 128 characters
+- Q: How should the system handle and recover from failed real-time updates due to network issues? → A: Show error message and require manual refresh
+- Q: How should the system handle fasts that are started but never formally ended by the user? → A: Keep indefinitely but allow manual end/delete
+- Q: How should the system indicate loading states during fast operations? → A: Simple loading spinners onlyfication: Fasting Tracker App
 
 **Feature Branch**: `001-fasting-app`  
 **Created**: 2025-10-25  
 **Status**: Draft  
 **Input**: User description: "Create a fasting app. This app is to keep track of starting and ending time for a fast. Propose a Fast model. The model should be owned by a user an only that user should have access to the Fast data. Create create, read, update, delete and list views. Use django-guardian to restrict access to the objects. Include the the the templates in the fasting/templates directory."
+
+## Clarifications
+
+### Session 2025-10-25
+
+- Q: What is the expected scale for this fasting app in terms of users and data volume? → A: Medium scale (1000-10,000 users, up to 100,000 fast records)
+- Q: What should be the exact character limit for user comments when ending a fast? → A: 128 characters
+- Q: How should the system handle and recover from failed real-time updates due to network issues? → A: Show error message and require manual refresh
+- Q: How should the system handle fasts that are started but never formally ended by the user? → A: Keep indefinitely but allow manual end/delete
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -95,7 +110,7 @@ A user wants to remove a fast record from their history if it was recorded by mi
 
 ### Edge Cases
 
-- What happens when a user starts a fast but never ends it (abandoned fast handling)?
+- What happens when a user starts a fast but never ends it (abandoned fast handling)? System keeps abandoned fasts indefinitely, allowing users to manually end or delete them
 - How does the system handle concurrent requests to start/end fasts from the same user?
 - What happens if a user's session expires while they have an active fast?
 - How are time zones handled for users in different locations?
@@ -103,7 +118,7 @@ A user wants to remove a fast record from their history if it was recorded by mi
 - How does the system handle very long comments (character limits and validation)?
 - What happens if the predefined emotional states need to be updated or expanded in the future?
 - How are emotional status statistics and trends calculated over time?
-- What happens when the 15-second auto-update fails due to network connectivity issues?
+- What happens when the 15-second auto-update fails due to network connectivity issues? System displays error message and provides manual refresh option
 - How does the system handle browser tab switching or background tab behavior affecting real-time updates?
 - What happens if multiple browser tabs are open showing the same active fast details?
 - How does the system behave when the user's computer goes to sleep while viewing active fast details?
@@ -119,7 +134,7 @@ A user wants to remove a fast record from their history if it was recorded by mi
 - **FR-005**: System MUST display elapsed hours for active fasts and completed fasts in detail views
 - **FR-006**: System MUST update elapsed time automatically every 15 seconds for active fasts when viewing fast details
 - **FR-007**: System MUST require emotional status selection when ending a fast from predefined options: Energized, Satisfied, Challenging, Difficult
-- **FR-008**: System MUST allow users to add optional comments when ending a fast for personal reflection
+- **FR-008**: System MUST allow users to add optional comments when ending a fast for personal reflection (maximum 128 characters)
 - **FR-009**: System MUST display emotional status and comments in fast history and detail views
 - **FR-010**: System MUST allow editing of emotional status and comments for existing fast records
 - **FR-011**: System MUST provide complete CRUD operations (create, read, update, delete) for fast records
@@ -130,6 +145,10 @@ A user wants to remove a fast record from their history if it was recorded by mi
 - **FR-016**: System MUST validate that fast end time is after start time
 - **FR-017**: System MUST require user authentication for all fasting operations
 - **FR-018**: System MUST provide user-friendly error messages for permission denials and validation failures
+- **FR-019**: System MUST validate comment length and prevent submission of comments exceeding 128 characters
+- **FR-020**: System MUST display clear error messages when real-time updates fail and provide manual refresh option to users
+- **FR-021**: System MUST preserve abandoned fasts (started but never ended) indefinitely and allow users to manually end or delete them
+- **FR-022**: System MUST display loading spinners during all fast operations (start, end, edit, delete) to indicate processing state
 
 ### Key Entities
 
@@ -142,7 +161,7 @@ A user wants to remove a fast record from their history if it was recorded by mi
 ### Measurable Outcomes
 
 - **SC-001**: Users can start a new fast in under 5 seconds from the dashboard
-- **SC-002**: Users can view their complete fasting history in under 3 seconds
+- **SC-002**: Users can view their complete fasting history in under 3 seconds (supporting up to 100,000 total fast records across all users)
 - **SC-003**: Fast duration calculations are accurate to the minute
 - **SC-004**: Elapsed hours for active fasts are displayed and calculated accurately in real-time
 - **SC-005**: Elapsed time updates automatically every 15 seconds (±2 seconds tolerance) for active fasts without user interaction
@@ -151,6 +170,7 @@ A user wants to remove a fast record from their history if it was recorded by mi
 - **SC-008**: 100% of fast records are properly isolated between users (no cross-user data access)
 - **SC-009**: System prevents creation of invalid fast records (end time before start time) with clear error messages
 - **SC-010**: All CRUD operations complete successfully for authorized users within 2 seconds
+- **SC-011**: System maintains performance with up to 10,000 concurrent users during peak usage
 
 ## Assumptions
 
@@ -161,10 +181,12 @@ A user wants to remove a fast record from their history if it was recorded by mi
 - Time zone handling will use server time zone (user-specific time zones not specified)
 - Fast records are persistent and do not automatically expire or archive
 - The four predefined emotional states (Energized, Satisfied, Challenging, Difficult) cover the primary range of fasting experiences
-- Comments field will have reasonable character limits (500-1000 characters assumed)
+- Comments field limited to 128 characters to encourage concise, focused reflection
 - Emotional status is required for completed fasts but comments remain optional
 - Users will find value in tracking emotional patterns alongside fasting duration data
 - Users will typically keep the fast details page open for extended periods during active fasts
 - JavaScript is enabled in user browsers to support real-time elapsed time updates
 - Network connectivity is generally stable for real-time updates (graceful degradation assumed for intermittent connectivity)
 - 15-second update interval provides good balance between real-time feel and server load
+- System designed for medium scale: 1000-10,000 users with up to 100,000 total fast records
+- Database and server infrastructure capable of handling medium-scale concurrent usage patterns
