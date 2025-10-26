@@ -35,7 +35,7 @@
 - [ ] **Simple UX**: User interfaces prioritize simplicity and usability  
 - [ ] **Responsive Design**: Full responsive design with Tailwind CSS, tested on multiple screen sizes
 - [ ] **Minimal Dependencies**: New dependencies justified, using existing libraries from pyproject.toml
-- [ ] **Django Best Practices**: Apps under healthy_herron package, models inherit from AuditableModel + TimeStampedModel
+- [ ] **Django Best Practices**: Apps under healthy_herron package, models inherit from AuditableModel + TimeStampedModel, APIs in api package with class-based views
 - [ ] **Testing Standards**: Class-based pytest tests, FactoryBoy factories for all models
 
 ## Project Structure
@@ -62,8 +62,13 @@ healthy_herron/
 │   ├── admin.py
 │   ├── apps.py
 │   ├── models.py              # Inherit from AuditableModel + TimeStampedModel
-│   ├── views.py               # Prefer class-based views
+│   ├── views.py               # Class-based views for web pages
 │   ├── urls.py
+│   ├── api/                   # API package within app
+│   │   ├── __init__.py
+│   │   ├── urls.py            # API URL patterns
+│   │   ├── views.py           # Class-based API views
+│   │   └── serializers.py     # DRF serializers
 │   ├── migrations/
 │   │   └── __init__.py
 │   └── tests/                 # Test package within app
@@ -71,6 +76,7 @@ healthy_herron/
 │       ├── factories.py       # FactoryBoy factories for models
 │       ├── test_models.py     # Class-based pytest tests
 │       ├── test_views.py
+│       ├── test_api.py        # API endpoint tests
 │       └── test_[component].py
 
 healthy_herron/templates/

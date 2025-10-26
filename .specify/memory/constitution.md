@@ -1,8 +1,9 @@
 <!-- Sync Impact Report:
-Version change: N/A → 1.0.0 (initial constitution)
-Added sections: Django Architecture Standards, Testing Standards
-New principles: Clean Code, Simple UX, Responsive Design, Minimal Dependencies, Django Best Practices
-Templates requiring updates: ⚠ pending manual review of all templates
+Version change: 1.0.0 → 1.1.0 (API structure requirements added)
+Modified principles: Django Best Practices (expanded with API package structure and class-based view requirements)
+Added sections: None
+Removed sections: None
+Templates requiring updates: ✅ plan-template.md updated with API structure
 Follow-up TODOs: None
 -->
 
@@ -23,7 +24,7 @@ All user interfaces MUST be fully responsive across desktop, tablet, and mobile 
 Prefer existing libraries from `pyproject.toml` over adding new dependencies. New dependencies require explicit justification and approval. Each dependency must provide significant value that outweighs maintenance overhead. Regular dependency audits for security and relevance. Remove unused dependencies promptly.
 
 ### V. Django Best Practices
-All Django apps MUST be created under the `healthy_herron` package. Models must inherit from both `core.models.AuditableModel` and `model_utils.models.TimeStampedModel`. Tests must be organized in a `tests` package within each app. Use class-based pytest tests exclusively. Create FactoryBoy factories for every model in the tests package.
+All Django apps MUST be created under the `healthy_herron` package. Models must inherit from both `core.models.AuditableModel` and `model_utils.models.TimeStampedModel`. Tests must be organized in a `tests` package within each app. Use class-based pytest tests exclusively. Create FactoryBoy factories for every model in the tests package. APIs must be organized in an `api` package within each app containing `urls.py`, `views.py`, and `serializers.py`. Use class-based views exclusively for both APIs and web pages.
 
 ## Django Architecture Standards
 
@@ -32,7 +33,8 @@ All code must follow Django conventions and project-specific patterns:
 - **App Structure**: New Django apps created under `healthy_herron` package only
 - **Model Inheritance**: All models inherit from `AuditableModel` and `TimeStampedModel`  
 - **URL Patterns**: Follow RESTful conventions where applicable
-- **Views**: Prefer class-based views for consistency and reusability
+- **Views**: Use class-based views exclusively for both web pages and APIs
+- **API Organization**: APIs organized in `api` package within each app with `urls.py`, `views.py`, `serializers.py`
 - **Templates**: Use Django template inheritance, organize in logical hierarchies
 
 ## Testing Standards
@@ -57,4 +59,4 @@ Constitution amendments require:
 
 All development decisions must align with these principles. When in doubt, choose the simpler, more maintainable solution.
 
-**Version**: 1.0.0 | **Ratified**: 2025-10-25 | **Last Amended**: 2025-10-25
+**Version**: 1.1.0 | **Ratified**: 2025-10-25 | **Last Amended**: 2025-10-25
