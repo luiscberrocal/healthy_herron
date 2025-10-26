@@ -17,10 +17,18 @@ class AuditableModel(models.Model):
     """
 
     created_by = models.ForeignKey(
-        User, related_name="%(class)s_created", on_delete=models.PROTECT, null=True, blank=True
+        User,
+        related_name="%(class)s_created",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
     )
     modified_by = models.ForeignKey(
-        User, related_name="%(class)s_modified", on_delete=models.PROTECT, null=True, blank=True
+        User,
+        related_name="%(class)s_modified",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
     )
 
     class Meta:

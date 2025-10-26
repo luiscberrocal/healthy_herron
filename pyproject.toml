@@ -100,7 +100,7 @@ select = [
     "SLOT",
     "SIM",
     "TID",
-    "TC",
+    # "TC",
     "INT",
     # "ARG", # Unused function argument
     "PTH",
