@@ -1,50 +1,60 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!-- Sync Impact Report:
+Version change: N/A → 1.0.0 (initial constitution)
+Added sections: Django Architecture Standards, Testing Standards
+New principles: Clean Code, Simple UX, Responsive Design, Minimal Dependencies, Django Best Practices
+Templates requiring updates: ⚠ pending manual review of all templates
+Follow-up TODOs: None
+-->
+
+# Healthy Herron Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Clean Code
+All code MUST be clean, readable, and maintainable. Functions and classes must have single responsibilities. Code must be self-documenting with meaningful names. Complex logic requires explanatory comments. Follow PEP 8 and use Ruff for linting. No dead code or commented-out code blocks in production branches.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Simple UX
+User interfaces MUST prioritize simplicity and usability over feature complexity. Every user interaction should be intuitive and require minimal cognitive load. Navigation must be clear and consistent. Error messages must be helpful and actionable. Forms should validate input client-side where possible.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Responsive Design (NON-NEGOTIABLE)
+All user interfaces MUST be fully responsive across desktop, tablet, and mobile devices. Use Tailwind CSS for consistent styling. Test on multiple screen sizes during development. No horizontal scrolling on mobile devices. Touch targets must be appropriately sized for mobile interaction.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Minimal Dependencies
+Prefer existing libraries from `pyproject.toml` over adding new dependencies. New dependencies require explicit justification and approval. Each dependency must provide significant value that outweighs maintenance overhead. Regular dependency audits for security and relevance. Remove unused dependencies promptly.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Django Best Practices
+All Django apps MUST be created under the `healthy_herron` package. Models must inherit from both `core.models.AuditableModel` and `model_utils.models.TimeStampedModel`. Tests must be organized in a `tests` package within each app. Use class-based pytest tests exclusively. Create FactoryBoy factories for every model in the tests package.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Django Architecture Standards
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+All code must follow Django conventions and project-specific patterns:
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+- **App Structure**: New Django apps created under `healthy_herron` package only
+- **Model Inheritance**: All models inherit from `AuditableModel` and `TimeStampedModel`  
+- **URL Patterns**: Follow RESTful conventions where applicable
+- **Views**: Prefer class-based views for consistency and reusability
+- **Templates**: Use Django template inheritance, organize in logical hierarchies
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+## Testing Standards
+
+Comprehensive testing is mandatory for all code:
+
+- **Test Framework**: Use pytest with class-based test organization
+- **Test Factories**: Create FactoryBoy factories for all models in `tests/factories.py`
+- **Test Location**: Tests organized in `tests` package within each Django app
+- **Coverage**: Maintain high test coverage, focus on business logic and edge cases
+- **Test Types**: Unit tests for individual functions/methods, integration tests for workflows
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes all other development practices and guidelines. All code reviews and pull requests MUST verify compliance with these principles. Any complexity or deviation from these principles must be explicitly justified and documented.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+Constitution amendments require:
+1. Written proposal with rationale for changes
+2. Review by project maintainers  
+3. Migration plan for existing code if applicable
+4. Update of all dependent templates and documentation
+
+All development decisions must align with these principles. When in doubt, choose the simpler, more maintainable solution.
+
+**Version**: 1.0.0 | **Ratified**: 2025-10-25 | **Last Amended**: 2025-10-25

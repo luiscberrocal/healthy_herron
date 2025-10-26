@@ -17,21 +17,26 @@
   the iteration process.
 -->
 
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [single/web/mobile - determines source structure]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Language/Version**: Python 3.13  
+**Primary Dependencies**: Django 5.2.7, django-model-utils, Tailwind CSS  
+**Storage**: PostgreSQL (configured in settings)  
+**Testing**: pytest with class-based tests and FactoryBoy  
+**Target Platform**: Web application (cross-platform responsive)
+**Project Type**: Django web application  
+**Performance Goals**: [NEEDS CLARIFICATION based on user requirements]  
+**Constraints**: Responsive design mandatory, minimal dependencies, clean code standards  
+**Scale/Scope**: [NEEDS CLARIFICATION based on user requirements]
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- [ ] **Clean Code**: All code follows PEP 8, uses meaningful names, single responsibilities
+- [ ] **Simple UX**: User interfaces prioritize simplicity and usability  
+- [ ] **Responsive Design**: Full responsive design with Tailwind CSS, tested on multiple screen sizes
+- [ ] **Minimal Dependencies**: New dependencies justified, using existing libraries from pyproject.toml
+- [ ] **Django Best Practices**: Apps under healthy_herron package, models inherit from AuditableModel + TimeStampedModel
+- [ ] **Testing Standards**: Class-based pytest tests, FactoryBoy factories for all models
 
 ## Project Structure
 
@@ -48,31 +53,35 @@ specs/[###-feature]/
 ```
 
 ### Source Code (repository root)
-<!--
-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
-  not include Option labels.
--->
 
 ```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
+# Django project structure
+healthy_herron/
+├── [new_app_name]/            # New Django app for this feature
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py              # Inherit from AuditableModel + TimeStampedModel
+│   ├── views.py               # Prefer class-based views
+│   ├── urls.py
+│   ├── migrations/
+│   │   └── __init__.py
+│   └── tests/                 # Test package within app
+│       ├── __init__.py
+│       ├── factories.py       # FactoryBoy factories for models
+│       ├── test_models.py     # Class-based pytest tests
+│       ├── test_views.py
+│       └── test_[component].py
 
-tests/
-├── contract/
-├── integration/
-└── unit/
+healthy_herron/templates/
+├── [app_name]/                # App-specific templates
+│   ├── base.html              # Extends project base.html
+│   └── [feature].html         # Feature templates
 
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
+healthy_herron/static/
+├── css/                       # Tailwind CSS compilation output
+└── js/                        # Feature-specific JavaScript
+```
 │   └── api/
 └── tests/
 
