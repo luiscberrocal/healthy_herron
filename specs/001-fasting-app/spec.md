@@ -49,9 +49,10 @@ A user wants to see their complete history of completed fasts to track their fas
 
 **Acceptance Scenarios**:
 
-1. **Given** a user with completed fasts, **When** they view their fasting history, **Then** they see all their fasts ordered by most recent first with start time, end time, and duration
-2. **Given** a user with no fasting history, **When** they view the history page, **Then** they see a message encouraging them to start their first fast
-3. **Given** a user tries to view another user's fasting history, **When** they attempt access, **Then** they can only see their own fasts
+1. **Given** a user with completed fasts, **When** they view their fasting history, **Then** they see all their fasts ordered by most recent first with start time, end time, duration, and elapsed hours
+2. **Given** a user with an active (ongoing) fast, **When** they view the fast details, **Then** they see the elapsed hours since the fast started updating in real-time or on page refresh
+3. **Given** a user with no fasting history, **When** they view the history page, **Then** they see a message encouraging them to start their first fast
+4. **Given** a user tries to view another user's fasting history, **When** they attempt access, **Then** they can only see their own fasts
 
 ---
 
@@ -102,14 +103,15 @@ A user wants to remove a fast record from their history if it was recorded by mi
 - **FR-002**: System MUST allow users to end their active fasting period with current timestamp  
 - **FR-003**: System MUST prevent users from having multiple active (unfinished) fasts simultaneously
 - **FR-004**: System MUST calculate and display fasting duration when a fast is completed
-- **FR-005**: System MUST provide complete CRUD operations (create, read, update, delete) for fast records
-- **FR-006**: System MUST restrict access so users can only view and modify their own fast records
-- **FR-007**: System MUST implement object-level permissions using django-guardian
-- **FR-008**: System MUST store templates in the fasting/templates directory following Django conventions
-- **FR-009**: System MUST display fasting history ordered by most recent first
-- **FR-010**: System MUST validate that fast end time is after start time
-- **FR-011**: System MUST require user authentication for all fasting operations
-- **FR-012**: System MUST provide user-friendly error messages for permission denials and validation failures
+- **FR-005**: System MUST display elapsed hours for active fasts and completed fasts in detail views
+- **FR-006**: System MUST provide complete CRUD operations (create, read, update, delete) for fast records
+- **FR-007**: System MUST restrict access so users can only view and modify their own fast records
+- **FR-008**: System MUST implement object-level permissions using django-guardian
+- **FR-009**: System MUST store templates in the fasting/templates directory following Django conventions
+- **FR-010**: System MUST display fasting history ordered by most recent first
+- **FR-011**: System MUST validate that fast end time is after start time
+- **FR-012**: System MUST require user authentication for all fasting operations
+- **FR-013**: System MUST provide user-friendly error messages for permission denials and validation failures
 
 ### Key Entities
 
@@ -123,9 +125,10 @@ A user wants to remove a fast record from their history if it was recorded by mi
 - **SC-001**: Users can start a new fast in under 5 seconds from the dashboard
 - **SC-002**: Users can view their complete fasting history in under 3 seconds
 - **SC-003**: Fast duration calculations are accurate to the minute
-- **SC-004**: 100% of fast records are properly isolated between users (no cross-user data access)
-- **SC-005**: System prevents creation of invalid fast records (end time before start time) with clear error messages
-- **SC-006**: All CRUD operations complete successfully for authorized users within 2 seconds
+- **SC-004**: Elapsed hours for active fasts are displayed and calculated accurately in real-time
+- **SC-005**: 100% of fast records are properly isolated between users (no cross-user data access)
+- **SC-006**: System prevents creation of invalid fast records (end time before start time) with clear error messages
+- **SC-007**: All CRUD operations complete successfully for authorized users within 2 seconds
 
 ## Assumptions
 
