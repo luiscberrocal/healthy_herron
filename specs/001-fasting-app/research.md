@@ -27,25 +27,25 @@
 
 ### 2. Real-Time Updates Implementation
 
-**Decision**: Use JavaScript with setInterval for 15-second elapsed time updates
+**Decision**: Use HTMX with server-side polling for 15-second elapsed time updates
 
-**Rationale**:
-- Requirement FR-006 specifies "System MUST update elapsed time automatically every 15 seconds for active fasts"
-- Success Criteria SC-005 defines tolerance of ±2 seconds for update frequency
-- Simple client-side JavaScript is sufficient for this use case without requiring WebSocket complexity
-- Minimal server load compared to constant AJAX polling
+**Rationale**: 
+- Requirement FR-006 specifies "System MUST update elapsed time automatically every 15 seconds using HTMX polling"
+- Constitution v1.2.0 mandates HTMX-only approach with no custom JavaScript allowed
+- HTMX provides clean server-side HTML fragment updates with minimal client-side complexity
+- Polling approach is simpler and more reliable than WebSocket for time display updates
 
 **Implementation Approach**:
-- JavaScript function to calculate elapsed time from start timestamp
-- `setInterval()` with 15-second intervals
-- Update DOM elements showing elapsed time
+- HTMX `hx-trigger="every 15s"` for automatic polling
+- Server endpoint returning HTML fragments with updated elapsed time
 - Error handling for network failures with manual refresh option (FR-020)
-- Page visibility API to pause updates when tab is inactive
+- HTMX `hx-indicator` for loading states during updates
+- Cross-tab synchronization using HTMX polling to same endpoints
 
 **Alternatives Considered**:
-- WebSocket real-time updates: Rejected due to added complexity and server infrastructure requirements for simple time display
-- Server-sent events (SSE): Rejected as overkill for client-side time calculations
-- AJAX polling every 15 seconds: Rejected due to unnecessary server load for time calculations
+- WebSocket real-time updates: Rejected due to added complexity and overkill for time calculations
+- JavaScript with setInterval: Rejected due to constitution prohibition on custom JavaScript
+- Server-sent events (SSE): Rejected as unnecessarily complex for simple time updates
 
 ### 3. Emotional Status Data Model
 
@@ -88,10 +88,11 @@
 
 ### 5. Template Organization and Responsive Design
 
-**Decision**: Use Tailwind CSS classes with mobile-first responsive design
+**Decision**: Use Tailwind CSS classes with mobile-first responsive design and HTMX integration
 
 **Rationale**:
 - Constitution principle III mandates "Responsive Design (NON-NEGOTIABLE)"
+- Constitution v1.2.0 requires HTMX-only approach for all interactive features
 - Requirement for templates in "fasting/templates" directory is explicitly stated
 - Tailwind CSS is already configured in the project
 - Mobile-first approach ensures optimal experience across devices
@@ -100,12 +101,14 @@
 - Create base template extending project's base.html
 - Use Tailwind responsive prefixes (sm:, md:, lg:) for breakpoint-specific styling
 - Implement CSS Grid/Flexbox for responsive layouts
+- Integrate HTMX attributes for real-time updates and form submissions
 - Optimize touch targets for mobile interaction
 - Test across multiple screen sizes during development
 
 **Alternatives Considered**:
 - Custom CSS with media queries: Rejected as project already uses Tailwind CSS
 - Bootstrap framework: Rejected as it would add unnecessary dependency when Tailwind is available
+- JavaScript for responsive behavior: Rejected due to constitution HTMX-only requirement
 
 ### 6. Form Validation and Error Handling
 
@@ -153,12 +156,13 @@
 | Component | Technology | Justification |
 |-----------|------------|---------------|
 | Object Permissions | django-guardian | Required by specification, industry standard |
-| Real-time Updates | JavaScript setInterval | Simple, efficient for time updates |
+| Real-time Updates | HTMX polling | Constitution requirement, simple and efficient |
 | Emotional Status | Django Choices | Fixed enumeration, built-in validation |
 | Duration Calculation | Model Properties | Dynamic calculation, consistency |
 | Responsive Design | Tailwind CSS | Already configured, mobile-first |
 | Form Validation | Django Forms + HTML5 | Comprehensive validation, good UX |
 | Query Optimization | Custom Managers | Performance requirements, user isolation |
+| Frontend Interactivity | HTMX | Constitution v1.2.0 mandate, no JavaScript allowed |
 
 ## Architecture Patterns
 
@@ -177,7 +181,7 @@
 ### Template Layer
 - Templates in `healthy_herron/templates/fasting/` (spec requirement)
 - Responsive design with Tailwind CSS (constitution requirement)
-- JavaScript for real-time updates
+- HTMX integration for real-time updates and form interactions
 - Progressive enhancement for accessibility
 
 ### API Layer

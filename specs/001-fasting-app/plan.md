@@ -7,63 +7,31 @@
 
 ## Summary
 
-Primary requirement: Build a Django web application for tracking fasting periods with user-owned Fast records supporting CRUD operations, emotional status tracking, real-time elapsed time updates, and object-level permissions via django-guardian. Core features include starting/ending fasts, viewing history with emotional states and comments, and real-time UI updates every 15 seconds for active fasts.
+Build a Django web application for tracking personal fasting periods with user-owned Fast records. Core features include starting/ending fasts, emotional status tracking (Energized, Satisfied, Challenging, Difficult), real-time elapsed time updates via HTMX polling every 15 seconds, complete CRUD operations, and object-level permissions using django-guardian. The system supports medium scale (1000-10,000 users, 100,000 fast records) with timezone configuration, session management, and data archival.
 
 ## Technical Context
 
 **Language/Version**: Python 3.13  
-**Primary Dependencies**: Django 5.2.7, django-model-utils, django-guardian, Tailwind CSS, pytest, FactoryBoy  
+**Primary Dependencies**: Django 5.2.7, django-model-utils, django-guardian, Tailwind CSS, HTMX  
 **Storage**: PostgreSQL (configured in settings)  
 **Testing**: pytest with class-based tests and FactoryBoy  
 **Target Platform**: Web application (responsive design mandatory)
 **Project Type**: Django web application  
-**Performance Goals**: Support 1000-10,000 users, up to 100,000 fast records, 2-second response times for CRUD operations  
-**Constraints**: Responsive design mandatory, minimal dependencies, clean code standards, real-time updates every 15 seconds  
-**Scale/Scope**: Medium scale (1000-10,000 users, 100,000 fast records), object-level permissions, emotional status tracking, JavaScript for real-time updates
+**Performance Goals**: Support 1000-10,000 concurrent users, 2-second response times for CRUD operations, 15-second HTMX polling intervals  
+**Constraints**: HTMX-only interactivity (no custom JavaScript), responsive design mandatory, minimal dependencies, clean code standards  
+**Scale/Scope**: Medium scale (1000-10,000 users, 100,000 fast records), object-level permissions, emotional status tracking, timezone support, data archival after 2 years
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-**Initial Check**: ✅ All requirements met
-**Post-Design Check**: ✅ Design validates all constitution principles
-
 - [x] **Clean Code**: All code follows PEP 8, uses meaningful names, single responsibilities
-  - ✅ Models use clear naming (Fast, FastManager)
-  - ✅ Views follow single responsibility (FastListView, FastDetailView, etc.)
-  - ✅ API endpoints use RESTful conventions
-  - ✅ Form classes handle single concerns (FastForm, FastEndForm)
-
-- [x] **Simple UX**: User interfaces prioritize simplicity and usability  
-  - ✅ Simple dashboard with clear "Start Fast" action
-  - ✅ Intuitive fast history with chronological ordering
-  - ✅ Clear form layouts for ending fasts with emotional status
-  - ✅ Real-time elapsed time updates without user interaction
-
+- [x] **Simple UX**: User interfaces prioritize simplicity and usability, use HTMX for interactivity (no custom JavaScript)
 - [x] **Responsive Design**: Full responsive design with Tailwind CSS, tested on multiple screen sizes
-  - ✅ Tailwind CSS classes used throughout templates
-  - ✅ Mobile-first responsive design approach documented
-  - ✅ Touch-friendly interface for mobile devices
-  - ✅ CSS Grid/Flexbox for responsive layouts
-
-- [x] **Minimal Dependencies**: New dependencies justified (django-guardian for object-level permissions), using existing libraries from pyproject.toml
-  - ✅ Only one new dependency: django-guardian (required by specification FR-013)
-  - ✅ Reusing existing Django, Tailwind CSS, pytest, FactoryBoy
-  - ✅ JavaScript solution uses vanilla JS without additional frameworks
-  - ✅ PostgreSQL already configured in project settings
-
+- [x] **Minimal Dependencies**: New dependencies justified (django-guardian for object-level permissions, HTMX for interactivity), using existing libraries from pyproject.toml
 - [x] **Django Best Practices**: Apps under healthy_herron package, models inherit from AuditableModel + TimeStampedModel, APIs in api package with class-based views
-  - ✅ App created as `healthy_herron.fasting` package
-  - ✅ Fast model inherits from both AuditableModel and TimeStampedModel
-  - ✅ API organized in `healthy_herron.fasting.api` package
-  - ✅ All views are class-based (FastListView, FastDetailView, etc.)
-  - ✅ Templates in required `fasting/templates` directory
-
 - [x] **Testing Standards**: Class-based pytest tests, FactoryBoy factories for all models
-  - ✅ FastFactory and CompletedFastFactory created for Fast model
-  - ✅ Test structure organized in `tests` package within app
-  - ✅ Tests planned for models, views, API, and permissions
-  - ✅ Guardian permissions integration in factory post_generation hooks
+- [x] **Frontend Interaction Standards**: Use HTMX for all dynamic features, no custom JavaScript, progressive enhancement
 
 ## Project Structure
 
@@ -113,15 +81,14 @@ healthy_herron/templates/
 ├── fasting/                   # App-specific templates (as per spec requirement)
 │   ├── base.html              # Extends project base.html
 │   ├── fast_list.html         # Fasting history view
-│   ├── fast_detail.html       # Individual fast details with real-time updates
+│   ├── fast_detail.html       # Individual fast details with HTMX real-time updates
 │   ├── fast_form.html         # Start/end fast forms
 │   └── fast_confirm_delete.html # Delete confirmation
 
 healthy_herron/static/
 ├── css/                       # Tailwind CSS compilation output
-└── js/                        # Feature-specific JavaScript for real-time updates
-    └── fasting/
-        └── realtime-updates.js # 15-second elapsed time updates
+└── htmx/                      # HTMX library files
+    └── htmx.min.js
 ```
 
 **Structure Decision**: Single Django app structure selected as this is a focused feature with clear boundaries. The fasting app will be created under the healthy_herron package following project conventions, with templates in the required fasting/templates directory and object-level permissions via django-guardian.
