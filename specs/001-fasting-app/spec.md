@@ -14,6 +14,11 @@
 - Q: How should the system handle and recover from failed HTMX real-time updates due to network issues? → A: Show error message and require manual refresh
 - Q: How should the system handle fasts that are started but never formally ended by the user? → A: Keep indefinitely but allow manual end/delete
 - Q: How should the system indicate loading states during fast operations? → A: Simple loading spinners only
+- Q: How should the system handle time zones for users in different locations? → A: User profile timezone setting - users manually configure their timezone
+- Q: How should the system handle concurrent requests to start/end fasts from the same user? → A: Use database-level locking to prevent concurrent modifications and show appropriate error messages
+- Q: What happens if a user's session expires while they have an active fast? → A: Preserve active fast state, redirect to login, and restore user to fast details page after re-authentication
+- Q: How should the system handle multiple browser tabs showing the same active fast details? → A: Synchronize elapsed time across all tabs using HTMX polling, with actions in one tab reflecting immediately in others
+- Q: What should be the data retention policy for old fast records? → A: Archive fasts older than 2 years to reduce database size while keeping them accessible
 
 ### Constitution Update 2025-10-25
 
@@ -112,8 +117,8 @@ A user wants to remove a fast record from their history if it was recorded by mi
 ### Edge Cases
 
 - What happens when a user starts a fast but never ends it (abandoned fast handling)? System keeps abandoned fasts indefinitely, allowing users to manually end or delete them
-- How does the system handle concurrent requests to start/end fasts from the same user?
-- What happens if a user's session expires while they have an active fast?
+- How does the system handle concurrent requests to start/end fasts from the same user? System uses database-level locking to prevent concurrent modifications and shows appropriate error messages when conflicts occur
+- What happens if a user's session expires while they have an active fast? System preserves active fast state, redirects to login, and restores user to fast details page after re-authentication
 - How are time zones handled for users in different locations?
 - What happens if a user closes the browser while selecting emotional status during fast completion?
 - How does the system handle very long comments (character limits and validation)?
@@ -121,7 +126,7 @@ A user wants to remove a fast record from their history if it was recorded by mi
 - How are emotional status statistics and trends calculated over time?
 - What happens when the 15-second HTMX auto-update fails due to network connectivity issues? System displays error message and provides manual refresh option
 - How does the system handle browser tab switching or background tab behavior affecting HTMX real-time updates?
-- What happens if multiple browser tabs are open showing the same active fast details?
+- What happens if multiple browser tabs are open showing the same active fast details? System synchronizes elapsed time across all tabs using HTMX polling, with actions in one tab reflecting immediately in others
 - How does the system behave when the user's computer goes to sleep while viewing active fast details?
 
 ## Requirements *(mandatory)*
@@ -151,6 +156,11 @@ A user wants to remove a fast record from their history if it was recorded by mi
 - **FR-021**: System MUST preserve abandoned fasts (started but never ended) indefinitely and allow users to manually end or delete them
 - **FR-022**: System MUST display loading spinners during all fast operations (start, end, edit, delete) to indicate processing state
 - **FR-023**: System MUST use HTMX exclusively for all interactive features and dynamic updates, with no custom JavaScript allowed
+- **FR-024**: System MUST allow users to configure their timezone in user profile settings and display all fast times in the user's configured timezone
+- **FR-025**: System MUST use database-level locking to prevent concurrent modifications of fast records by the same user and display appropriate error messages when conflicts occur
+- **FR-026**: System MUST preserve active fast state when user session expires, redirect to login, and restore user to fast details page after successful re-authentication
+- **FR-027**: System MUST synchronize elapsed time and fast actions across multiple browser tabs using HTMX polling, ensuring actions in one tab reflect immediately in others
+- **FR-028**: System MUST automatically archive fast records older than 2 years to reduce database size while keeping them accessible for user viewing and analysis
 
 ### Key Entities
 
@@ -180,8 +190,8 @@ A user wants to remove a fast record from their history if it was recorded by mi
 - Users understand basic fasting concepts and terminology
 - django-guardian library will be added to project dependencies
 - Users will primarily access the app via web browsers (responsive design not specified but assumed)
-- Time zone handling will use server time zone (user-specific time zones not specified)
-- Fast records are persistent and do not automatically expire or archive
+- Users will configure their timezone in profile settings for accurate time display
+- Fast records are archived after 2 years but remain accessible for long-term tracking and analysis
 - The four predefined emotional states (Energized, Satisfied, Challenging, Difficult) cover the primary range of fasting experiences
 - Comments field limited to 128 characters to encourage concise, focused reflection
 - Emotional status is required for completed fasts but comments remain optional
