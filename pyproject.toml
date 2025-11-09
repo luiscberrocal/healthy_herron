@@ -126,9 +126,27 @@ ignore = [
     # https://github.com/astral-sh/ruff/issues/7871
 ]
 
-[tool.ruff.lint.isort]
-force-single-line = true
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+[tool.ruff.lint.per-file-ignores]
+# Ignore `E402` (import violations) in all `__init__.py` files, and in `path/to/file.py`.
+"__init__.py" = ["E402", "D"]
+# Ignore `D` rules everywhere except for the `src/` directory.
+"**/tests/**.py" = ["D", "ANN", "ERA", "PLR", "ARG", "SLF"]
+"**/migrations/**.py" = ["D", "ANN", "ERA", "PLR", "ARG", "SLF"]
 
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false
+
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"
 [dependency-groups]
 dev = [
     "coverage==7.11.0",
@@ -154,7 +172,7 @@ dev = [
 
 [project]
 name = "healthy_herron"
-version = "0.2.0"
+version = "0.2.1"
 description = "Health tracking app."
 readme = "README.md"
 

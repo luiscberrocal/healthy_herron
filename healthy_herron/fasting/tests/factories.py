@@ -18,18 +18,21 @@ class FastFactory(factory.django.DjangoModelFactory):
     comments = factory.Faker("text", max_nb_chars=128)
 
     @factory.post_generation
-    def completed(obj, create, extracted, **kwargs):
+    def completed(self, create, extracted, **kwargs):
         """Create a completed fast if completed=True is passed."""
         if extracted:
-            obj.end_time = obj.start_time + timezone.timedelta(hours=16)
-            obj.emotional_status = factory.Faker("random_element",
-                                               elements=["energized", "satisfied", "challenging", "difficult"]).generate({})
+            self.end_time = self.start_time + timezone.timedelta(hours=16)
+            self.emotional_status = factory.Faker(
+                "random_element",
+                elements=["energized", "satisfied", "challenging", "difficult"],
+            ).generate({})
             if create:
-                obj.save()
+                self.save()
 
 
 class ActiveFastFactory(FastFactory):
     """Factory for creating active (ongoing) fasts."""
+
     end_time = None
     emotional_status = None
     comments = ""
@@ -37,7 +40,12 @@ class ActiveFastFactory(FastFactory):
 
 class CompletedFastFactory(FastFactory):
     """Factory for creating completed fasts."""
-    end_time = factory.LazyAttribute(lambda obj: obj.start_time + timezone.timedelta(hours=16))
-    emotional_status = factory.Faker("random_element",
-                                   elements=["energized", "satisfied", "challenging", "difficult"])
+
+    end_time = factory.LazyAttribute(
+        lambda obj: obj.start_time + timezone.timedelta(hours=16),
+    )
+    emotional_status = factory.Faker(
+        "random_element",
+        elements=["energized", "satisfied", "challenging", "difficult"],
+    )
     comments = factory.Faker("text", max_nb_chars=100)
