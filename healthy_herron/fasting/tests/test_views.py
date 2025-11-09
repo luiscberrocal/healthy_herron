@@ -38,8 +38,7 @@ class DashboardViewTest(TestCase):
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'No Active Fast')
-        self.assertNotContains(response, 'Active Fast')
+        self.assertContains(response, " You don't currently have an active fast")
 
     def test_dashboard_with_active_fast(self):
         """Test dashboard when user has an active fast."""
@@ -177,6 +176,7 @@ class EndFastViewTest(TestCase):
 
     def test_end_fast_post_success(self):
         """Test successful fast completion."""
+        url = reverse('fasting:end_fast')
         fast = Fast.objects.create(
             user=self.user,
             start_time=timezone.now() - timedelta(hours=16)
@@ -190,7 +190,7 @@ class EndFastViewTest(TestCase):
             'comments': 'Felt great!'
         }
 
-        response = self.client.post(self.url, post_data)
+        response = self.client.post(url, post_data)
 
         # Should redirect to dashboard
         self.assertRedirects(response, reverse('fasting:dashboard'))
@@ -347,7 +347,7 @@ class FastDetailViewTest(TestCase):
 
     def test_fast_detail_success(self):
         """Test successful fast detail view."""
-        fast = Fast.objects.create(
+        fast = FastFactory.create(
             user=self.user,
             start_time=timezone.now() - timedelta(hours=16),
             end_time=timezone.now(),

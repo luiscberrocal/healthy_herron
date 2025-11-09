@@ -122,10 +122,7 @@ class EndFastForm(forms.ModelForm):
 
         # Validate that emotional status is provided when ending
         if end_time and not emotional_status:
-            raise ValidationError(
-                _("Emotional status is required when ending a fast."),
-                code='emotional_status_required',
-            )
+            self.add_error('emotional_status', _("Emotional status is required when ending a fast."))
 
         # Validate that end time is after start time
         if self.instance and self.instance.start_time and end_time:
@@ -218,8 +215,6 @@ class FastUpdateForm(forms.ModelForm):
 
         # Validate that emotional status is provided when ending
         if end_time and not emotional_status:
-            raise ValidationError(
-                _("Emotional status is required when setting an end time.")
-            )
+            self.add_error('emotional_status', _("Emotional status is required when ending a fast."))
 
         return cleaned_data
