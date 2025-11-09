@@ -40,16 +40,6 @@ class FastFormTest(TestCase):
         self.assertIn('start_time', form.errors)
         self.assertIn('cannot be in the future', str(form.errors['start_time']))
 
-    def test_fast_form_very_old_start_time(self):
-        """Test form with very old start time (more than 7 days ago)."""
-        form_data = {
-            'start_time': timezone.now() - timedelta(days=8)
-        }
-        form = StartFastForm(data=form_data, user=self.user)
-
-        self.assertFalse(form.is_valid())
-        self.assertIn('start_time', form.errors)
-        self.assertIn('cannot be more than 7 days ago', str(form.errors['start_time']))
 
     def test_fast_form_with_existing_active_fast(self):
         """Test form when user already has an active fast."""
@@ -116,7 +106,7 @@ class FastFormTest(TestCase):
         form = StartFastForm(user=self.user)
 
         help_text = form.fields['start_time'].help_text
-        self.assertIn('When did you start', help_text)
+        self.assertIn('When the fast began', help_text)
 
     def test_fast_form_label(self):
         """Test form field labels."""

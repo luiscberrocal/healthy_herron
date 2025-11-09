@@ -29,7 +29,7 @@ class FastModelTest(TestCase):
             user=self.user,
             start_time=timezone.now()
         )
-        
+
         self.assertEqual(fast.user, self.user)
         self.assertIsNotNone(fast.start_time)
         self.assertIsNone(fast.end_time)
@@ -37,12 +37,14 @@ class FastModelTest(TestCase):
 
     def test_fast_string_representation(self):
         """Test the string representation of a fast."""
-        start_time = timezone.now()
-        fast = Fast.objects.create(
+        start_time = timezone.now() - timedelta(hours=16)
+        fast = FastFactory.create(
             user=self.user,
-            start_time=start_time
+            start_time=start_time,
+            end_time=timezone.now(),
+            emotional_status='satisfied'
         )
-        
+
         expected = f"Fast {start_time.strftime('%Y-%m-%d')} ({fast.duration_hours})"
         self.assertEqual(str(fast), expected)
 
@@ -54,7 +56,7 @@ class FastModelTest(TestCase):
             start_time=timezone.now()
         )
         self.assertTrue(active_fast.is_active)
-        
+
         # Completed fast
         completed_fast = Fast.objects.create(
             user=self.user,
@@ -68,14 +70,14 @@ class FastModelTest(TestCase):
         """Test the duration property."""
         start_time = timezone.now() - timedelta(hours=16, minutes=30)
         end_time = timezone.now()
-        
+
         fast = Fast.objects.create(
             user=self.user,
             start_time=start_time,
             end_time=end_time,
             emotional_status='energized'
         )
-        
+
         expected_duration = end_time - start_time
         self.assertEqual(fast.duration, expected_duration)
 
@@ -85,7 +87,7 @@ class FastModelTest(TestCase):
             user=self.user,
             start_time=timezone.now()
         )
-        
+
         self.assertIsNone(fast.duration)
 
     def test_elapsed_time_property(self):
@@ -95,7 +97,7 @@ class FastModelTest(TestCase):
             user=self.user,
             start_time=start_time
         )
-        
+
         elapsed = fast.elapsed_time
         self.assertGreaterEqual(elapsed.total_seconds(), 5 * 3600)  # At least 5 hours
 
@@ -103,14 +105,14 @@ class FastModelTest(TestCase):
         """Test duration_hours property formatting."""
         start_time = timezone.now() - timedelta(hours=16, minutes=30)
         end_time = timezone.now()
-        
+
         fast = Fast.objects.create(
             user=self.user,
             start_time=start_time,
             end_time=end_time,
             emotional_status='challenging'
         )
-        
+
         # Should be formatted as "16h 30m"
         self.assertIn('16h', fast.duration_hours)
         self.assertIn('30m', fast.duration_hours)
@@ -122,7 +124,7 @@ class FastModelTest(TestCase):
             user=self.user,
             start_time=start_time
         )
-        
+
         # Should be formatted as "8h 45m" (approximately)
         self.assertIn('h', fast.elapsed_hours)
         self.assertIn('m', fast.elapsed_hours)
@@ -131,14 +133,14 @@ class FastModelTest(TestCase):
         """Test duration_seconds property."""
         start_time = timezone.now() - timedelta(hours=2)
         end_time = timezone.now()
-        
+
         fast = Fast.objects.create(
             user=self.user,
             start_time=start_time,
             end_time=end_time,
             emotional_status='satisfied'
         )
-        
+
         expected_seconds = int((end_time - start_time).total_seconds())
         self.assertEqual(fast.duration_seconds, expected_seconds)
 
@@ -149,7 +151,7 @@ class FastModelTest(TestCase):
             user=self.user,
             start_time=start_time
         )
-        
+
         elapsed_seconds = fast.elapsed_seconds
         self.assertGreaterEqual(elapsed_seconds, 3 * 3600)  # At least 3 hours
 
@@ -159,9 +161,9 @@ class FastModelTest(TestCase):
             user=self.user,
             start_time=timezone.now() - timedelta(hours=12)
         )
-        
+
         fast.end_fast('energized', 'Felt great!')
-        
+
         self.assertIsNotNone(fast.end_time)
         self.assertEqual(fast.emotional_status, 'energized')
         self.assertEqual(fast.comments, 'Felt great!')
@@ -175,7 +177,7 @@ class FastModelTest(TestCase):
             end_time=timezone.now(),
             emotional_status='satisfied'
         )
-        
+
         with self.assertRaises(ValidationError):
             fast.end_fast('energized', 'Test comment')
 
@@ -185,7 +187,7 @@ class FastModelTest(TestCase):
             user=self.user,
             start_time=timezone.now()
         )
-        
+
         expected_url = f'/fasting/fasts/{fast.pk}/'
         self.assertEqual(fast.get_absolute_url(), expected_url)
 
@@ -193,14 +195,14 @@ class FastModelTest(TestCase):
         """Test validation that end_time must be after start_time."""
         start_time = timezone.now()
         end_time = start_time - timedelta(hours=1)  # End before start
-        
+
         fast = Fast(
             user=self.user,
             start_time=start_time,
             end_time=end_time,
             emotional_status='satisfied'
         )
-        
+
         with self.assertRaises(ValidationError):
             fast.clean()
 
@@ -211,7 +213,7 @@ class FastModelTest(TestCase):
             start_time=timezone.now(),
             comments='x' * 129  # 129 characters
         )
-        
+
         with self.assertRaises(ValidationError):
             fast.clean()
 
@@ -223,7 +225,7 @@ class FastModelTest(TestCase):
             end_time=timezone.now()
             # Missing emotional_status
         )
-        
+
         with self.assertRaises(ValidationError):
             fast.clean()
 
@@ -234,32 +236,32 @@ class FastModelTest(TestCase):
             user=self.user,
             start_time=timezone.now() - timedelta(hours=2)
         )
-        
+
         # Try to create second active fast
         second_fast = Fast(
             user=self.user,
             start_time=timezone.now()
         )
-        
+
         with self.assertRaises(ValidationError):
             second_fast.clean()
 
     def test_multiple_active_fasts_different_users(self):
         """Test that different users can have active fasts simultaneously."""
         user2 = UserFactory()
-        
+
         # Create active fast for first user
         Fast.objects.create(
             user=self.user,
             start_time=timezone.now() - timedelta(hours=2)
         )
-        
+
         # Create active fast for second user - should be valid
         fast2 = Fast(
             user=user2,
             start_time=timezone.now()
         )
-        
+
         try:
             fast2.clean()  # Should not raise ValidationError
         except ValidationError:
@@ -269,21 +271,21 @@ class FastModelTest(TestCase):
         """Test that save() calls clean() for validation."""
         start_time = timezone.now()
         end_time = start_time - timedelta(hours=1)  # Invalid: end before start
-        
+
         fast = Fast(
             user=self.user,
             start_time=start_time,
             end_time=end_time,
             emotional_status='satisfied'
         )
-        
+
         with self.assertRaises(ValidationError):
             fast.save()
 
     def test_emotional_status_choices(self):
         """Test emotional status choices."""
         valid_statuses = ['energized', 'satisfied', 'challenging', 'difficult']
-        
+
         for status in valid_statuses:
             fast = Fast.objects.create(
                 user=self.user,
@@ -299,13 +301,13 @@ class FastModelTest(TestCase):
             user=self.user,
             start_time=timezone.now()
         )
-        
+
         test_datetime = timezone.now()
-        
+
         # These methods currently return the input unchanged (TODO implementation)
         result_to = Fast.to_user_timezone(test_datetime, self.user)
         result_from = Fast.from_user_timezone(test_datetime, self.user)
-        
+
         self.assertEqual(result_to, test_datetime)
         self.assertEqual(result_from, test_datetime)
 
@@ -329,10 +331,10 @@ class FastManagerTest(TestCase):
             user=self.other_user,
             start_time=timezone.now()
         )
-        
+
         # Test filtering
         user_fasts = Fast.objects.for_user(self.user)
-        
+
         self.assertIn(user_fast, user_fasts)
         self.assertNotIn(other_user_fast, user_fasts)
 
@@ -349,9 +351,9 @@ class FastManagerTest(TestCase):
             end_time=timezone.now(),
             emotional_status='satisfied'
         )
-        
+
         active_fasts = Fast.objects.active_for_user(self.user)
-        
+
         self.assertIn(active_fast, active_fasts)
         self.assertNotIn(completed_fast, active_fasts)
 
@@ -368,9 +370,9 @@ class FastManagerTest(TestCase):
             end_time=timezone.now(),
             emotional_status='satisfied'
         )
-        
+
         completed_fasts = Fast.objects.completed_for_user(self.user)
-        
+
         self.assertNotIn(active_fast, completed_fasts)
         self.assertIn(completed_fast, completed_fasts)
 
@@ -390,7 +392,7 @@ class SessionManagerTest(TestCase):
             user=self.user,
             start_time=timezone.now()
         )
-        
+
         # Test that we can retrieve the active fast
         active_fasts = Fast.objects.active_for_user(self.user)
         self.assertEqual(active_fasts.count(), 1)
@@ -403,12 +405,12 @@ class SessionManagerTest(TestCase):
             user=self.user,
             start_time=timezone.now()
         )
-        
+
         # Attempting to create another should fail validation
         fast2 = Fast(
             user=self.user,
             start_time=timezone.now()
         )
-        
+
         with self.assertRaises(ValidationError):
             fast2.clean()
