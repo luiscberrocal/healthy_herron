@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils import timezone
@@ -71,6 +73,8 @@ class StartFastForm(forms.ModelForm):
 
 class EndFastForm(forms.ModelForm):
     """Form for ending an active fast with emotional status and comments."""
+    DEFAULT_MIN_FAST_DURATION_MINUTES = 30
+    DEFAULT_MAX_FAST_DURATION_MINUTES = 7 * 24 * 60  # 7 days
 
     class Meta:
         model = Fast
@@ -140,6 +144,20 @@ class EndFastForm(forms.ModelForm):
                 'end_time',
                 _("End time cannot be in the future."),
             )
+        if end_time:
+            duration = end_time - self.instance.start_time
+            min_duration = timedelta(minutes=self.DEFAULT_MIN_FAST_DURATION_MINUTES)
+            if duration < min_duration:
+                self.add_error(
+                    'end_time',
+                    _(f"Fast duration must be at least {self.DEFAULT_MIN_FAST_DURATION_MINUTES} minutes."),
+                )
+            max_duration = timedelta(minutes=self.DEFAULT_MAX_FAST_DURATION_MINUTES)
+            if duration > max_duration:
+                self.add_error(
+                    'end_time',
+                    _(f"Fast duration cannot exceed {self.DEFAULT_MAX_FAST_DURATION_MINUTES // 1440} days."),
+                )
         return end_time
 
 

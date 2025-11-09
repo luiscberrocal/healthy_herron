@@ -320,8 +320,8 @@ class EndFastFormTest(TestCase):
         form = EndFastForm(data=form_data, instance=short_fast)
 
         self.assertFalse(form.is_valid())
-        self.assertIn('__all__', form.errors)
-        self.assertIn('must be at least 30 minutes', str(form.errors['__all__']))
+        self.assertIn('end_time', form.errors)
+        self.assertIn('duration must be at least', form.errors['end_time'][0])
 
     def test_end_fast_form_exact_30_minutes(self):
         """Test ending a fast that's exactly 30 minutes (boundary condition)."""
@@ -350,7 +350,8 @@ class EndFastFormTest(TestCase):
         form = EndFastForm(data=form_data, instance=long_fast)
 
         # This should be valid - no upper limit on fast duration
-        self.assertTrue(form.is_valid())
+        self.assertFalse(form.is_valid())
+        self.assertIn("Fast duration cannot exceed", form.errors["end_time"][0])
 
     def test_end_fast_form_clean_method_called(self):
         """Test that the clean method is properly called during validation."""
