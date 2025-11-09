@@ -1,0 +1,50 @@
+{% comment %}
+Loading spinner components for HTMX operations
+All spinners use Tailwind CSS classes per constitution requirements
+{% endcomment %}
+
+<!-- Default loading spinner for HTMX requests -->
+<div id="loading-spinner" class="hidden">
+  <div class="flex items-center justify-center space-x-2">
+    <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+    <span class="text-sm text-gray-600">Loading...</span>
+  </div>
+</div>
+
+<!-- Inline spinner for buttons -->
+<div id="button-spinner" class="hidden inline-flex items-center">
+  <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+  Processing...
+</div>
+
+<!-- Full page overlay spinner for major operations -->
+<div id="overlay-spinner" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+  <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+    <div class="mt-3 text-center">
+      <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
+        <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+      </div>
+      <h3 class="text-lg leading-6 font-medium text-gray-900 mt-4">Processing</h3>
+      <div class="mt-2 px-7 py-3">
+        <p class="text-sm text-gray-500">
+          Please wait while we process your request...
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Timer update spinner (minimal for real-time updates) -->
+<div id="timer-spinner" class="hidden inline-block">
+  <div class="animate-pulse">
+    <div class="h-2 w-2 bg-blue-600 rounded-full"></div>
+  </div>
+</div>
+
+{% comment %}
+HTMX Integration Instructions:
+- Add hx-indicator="#loading-spinner" to show default spinner
+- Add hx-indicator="#button-spinner" for button operations  
+- Add hx-indicator="#overlay-spinner" for full-page operations
+- Use timer-spinner for frequent timer updates
+{% endcomment %}

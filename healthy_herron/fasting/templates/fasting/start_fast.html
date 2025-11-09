@@ -1,0 +1,45 @@
+{% extends "fasting/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Start New Fast - Fasting Tracker{% endblock title %}
+
+{% block content %}
+<div class="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
+  <h1 class="text-2xl font-bold text-gray-900 mb-6">Start New Fast</h1>
+  
+  <form method="post" hx-post="{% url 'fasting:start_fast' %}" hx-indicator="#button-spinner">
+    {% csrf_token %}
+    
+    <div class="mb-4">
+      <label for="{{ form.start_time.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+        Start Time
+      </label>
+      {{ form.start_time }}
+      {% if form.start_time.errors %}
+        <div class="mt-1 text-sm text-red-600">
+          {{ form.start_time.errors }}
+        </div>
+      {% endif %}
+    </div>
+    
+    {% if form.non_field_errors %}
+      <div class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+        {{ form.non_field_errors }}
+      </div>
+    {% endif %}
+    
+    <div class="flex space-x-3">
+      <button type="submit" 
+              class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        <span class="button-text">Start Fast</span>
+        {% include "components/loading.html" %}
+      </button>
+      
+      <a href="{% url 'fasting:dashboard' %}" 
+         class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded text-center">
+        Cancel
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock content %}

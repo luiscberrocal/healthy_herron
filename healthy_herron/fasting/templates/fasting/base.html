@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Fasting Tracker{% endblock title %}
+
+{% block content %}
+<!-- Fasting app base template -->
+<!-- Content will be overridden by child templates -->
+{% endblock content %}
+
+{% block extra_css %}
+<!-- Fasting-specific CSS will be added here -->
+<link rel="stylesheet" href="{% static 'css/fasting.css' %}">
+{% endblock extra_css %}
+
+{% block extra_js %}
+<!-- HTMX-only interactions - no custom JavaScript allowed per constitution -->
+{% endblock extra_js %}

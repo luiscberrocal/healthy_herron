@@ -1,0 +1,100 @@
+{% extends "fasting/base.html" %}
+{% load static %}
+
+{% block title %}Fasting Dashboard{% endblock title %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto p-6">
+  <h1 class="text-3xl font-bold text-gray-900 mb-8">Fasting Dashboard</h1>
+  
+  {% if active_fast %}
+    <!-- Active Fast Section -->
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+      <h2 class="text-xl font-semibold text-blue-900 mb-4">Active Fast</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <p class="text-sm text-blue-700 mb-1">Started</p>
+          <p class="text-lg font-medium text-blue-900">
+            {{ active_fast.start_time|date:"M d, Y g:i A" }}
+          </p>
+        </div>
+        
+        <div>
+          <p class="text-sm text-blue-700 mb-1">Elapsed Time</p>
+          <div id="timer-display" 
+               hx-get="{% url 'fasting:timer_update' %}" 
+               hx-trigger="every 15s"
+               hx-indicator="#timer-spinner">
+            {% include "fasting/timer_fragment.html" %}
+          </div>
+        </div>
+      </div>
+      
+      <div class="mt-6 flex space-x-3">
+        <a href="{% url 'fasting:fast_detail' active_fast.pk %}" 
+           class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          View Details
+        </a>
+        <a href="{% url 'fasting:end_fast' %}" 
+           class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+          End Fast
+        </a>
+      </div>
+    </div>
+  {% else %}
+    <!-- No Active Fast Section -->
+    <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-8">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">No Active Fast</h2>
+      <p class="text-gray-600 mb-4">
+        You don't currently have an active fast. Start a new fast to begin tracking your fasting period.
+      </p>
+      
+      <a href="{% url 'fasting:start_fast' %}" 
+         class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded inline-block">
+        Start New Fast
+      </a>
+    </div>
+  {% endif %}
+  
+  <!-- Recent Fasts Section -->
+  {% if recent_fasts %}
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Recent Fasts</h2>
+      
+      <div class="space-y-3">
+        {% for fast in recent_fasts %}
+          <div class="border border-gray-200 rounded-lg p-4">
+            <div class="flex justify-between items-center">
+              <div>
+                <p class="font-medium text-gray-900">
+                  {{ fast.start_time|date:"M d, Y" }}
+                </p>
+                <p class="text-sm text-gray-600">
+                  Duration: {{ fast.duration_hours }}
+                </p>
+                {% if fast.emotional_status %}
+                  <p class="text-sm text-gray-600">
+                    Feeling: {{ fast.get_emotional_status_display }}
+                  </p>
+                {% endif %}
+              </div>
+              <a href="{% url 'fasting:fast_detail' fast.pk %}" 
+                 class="text-blue-600 hover:text-blue-800 text-sm">
+                View Details
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      
+      <div class="mt-4">
+        <a href="{% url 'fasting:fast_list' %}" 
+           class="text-blue-600 hover:text-blue-800 text-sm">
+          View All Fasts →
+        </a>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock content %}
