@@ -189,7 +189,7 @@ class EndFastFormTest(TestCase):
 
         self.assertFalse(form.is_valid())
         self.assertIn('end_time', form.errors)
-        self.assertIn('cannot be before the start time', str(form.errors['end_time']))
+        self.assertIn('End time must be after the start time.', str(form.errors['end_time']))
 
     def test_end_fast_form_future_end_time(self):
         """Test form with future end time."""
@@ -337,8 +337,7 @@ class EndFastFormTest(TestCase):
 
     def test_end_fast_form_exact_30_minutes(self):
         """Test ending a fast that's exactly 30 minutes (boundary condition)."""
-        exact_fast = Fast.objects.create(
-            user=self.user,
+        exact_fast = FastFactory.create(
             start_time=timezone.now() - timedelta(minutes=30)
         )
 
