@@ -1,10 +1,10 @@
 <!-- Sync Impact Report:
-Version change: 1.1.0 → 1.2.0 (HTMX requirement added, JavaScript prohibited)
-Modified principles: Simple UX (expanded with HTMX requirement and JavaScript prohibition for interactive features)
-Added sections: Frontend Interaction Standards
+Version change: 1.2.0 → 1.2.1 (Patch: clarification on model manager location)
+Modified principles: Django Architecture Standards (added explicit rule for managers.py)
+Added sections: None
 Removed sections: None
-Templates requiring updates: ✅ plan-template.md updated with HTMX constitution check, ✅ spec-template.md verified (no updates needed)
-Follow-up TODOs: Update existing projects to migrate from JavaScript to HTMX
+Templates requiring updates: ✅ plan-template.md (managers.py rule added), ✅ spec-template.md (no changes needed), ✅ tasks-template.md (task type for manager location added)
+Follow-up TODOs: None
 -->
 
 # Healthy Herron Constitution
@@ -26,6 +26,8 @@ Prefer existing libraries from `pyproject.toml` over adding new dependencies. Ne
 ### V. Django Best Practices
 All Django apps MUST be created under the `healthy_herron` package. Models must inherit from both `core.models.AuditableModel` and `model_utils.models.TimeStampedModel`. Tests must be organized in a `tests` package within each app. Use class-based pytest tests exclusively. Create FactoryBoy factories for every model in the tests package. APIs must be organized in an `api` package within each app containing `urls.py`, `views.py`, and `serializers.py`. Use class-based views exclusively for both APIs and web pages.
 
+**Model Managers Location**: All custom model managers MUST be defined in a separate `managers.py` module within the app. Managers MUST NOT be included in `models.py`. This ensures separation of concerns and improves maintainability.
+
 ## Frontend Interaction Standards
 
 All dynamic user interactions must follow these patterns:
@@ -46,6 +48,7 @@ All code must follow Django conventions and project-specific patterns:
 - **Views**: Use class-based views exclusively for both web pages and APIs
 - **API Organization**: APIs organized in `api` package within each app with `urls.py`, `views.py`, `serializers.py`
 - **Templates**: Use Django template inheritance, organize in logical hierarchies
+- **Managers**: All custom model managers MUST be placed in `managers.py` and NOT in `models.py`
 
 ## Testing Standards
 
