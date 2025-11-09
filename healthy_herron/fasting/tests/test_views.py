@@ -266,8 +266,8 @@ class FastListViewTest(TestCase):
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, str(user_fast.start_time.date()))
-        self.assertNotContains(response, str(other_user_fast.start_time.date()))
+        self.assertContains(response, "Satisfied")
+        self.assertNotContains(response, "Energized")
 
     def test_fast_list_pagination(self):
         """Test pagination in fast list."""
@@ -361,7 +361,7 @@ class FastDetailViewTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Fast Details')
-        self.assertContains(response, fast.emotional_status)
+        self.assertContains(response, "Energized")
         self.assertContains(response, fast.comments)
 
     def test_fast_detail_navigation(self):
