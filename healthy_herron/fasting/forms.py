@@ -108,6 +108,7 @@ class EndFastForm(forms.ModelForm):
 
         # Make emotional status required
         self.fields['emotional_status'].required = True
+        self.fields['emotional_status'].label = _('How did you feel?')
 
     def clean(self):
         """Validate end time requirements."""
@@ -128,6 +129,18 @@ class EndFastForm(forms.ModelForm):
                 self.add_error('end_time', _("End time must be after the start time."))
 
         return cleaned_data
+
+    def clean_end_time(self):
+        """Validate that end time is not in the future."""
+        end_time = self.cleaned_data.get('end_time')
+        if not end_time:
+            self.add_error('end_time', _("End time is required."))
+        if end_time and end_time > timezone.now():
+            self.add_error(
+                'end_time',
+                _("End time cannot be in the future."),
+            )
+        return end_time
 
 
 class FastUpdateForm(forms.ModelForm):

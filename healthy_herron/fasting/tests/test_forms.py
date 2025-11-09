@@ -205,7 +205,7 @@ class EndFastFormTest(TestCase):
 
     def test_end_fast_form_valid_emotional_statuses(self):
         """Test form with all valid emotional statuses."""
-        valid_statuses = ['hungry', 'satisfied', 'energized', 'weak', 'focused']
+        valid_statuses = [status[0] for status in Fast.EMOTIONAL_STATUS_CHOICES]
 
         for status in valid_statuses:
             form_data = {
