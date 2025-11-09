@@ -1,8 +1,7 @@
 from typing import ClassVar
 
 from django.contrib.auth.models import AbstractUser
-from django.db.models import CharField
-from django.db.models import EmailField
+from django.db.models import CharField, EmailField
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
@@ -22,13 +21,13 @@ class User(AbstractUser):
     last_name = None  # type: ignore[assignment]
     email = EmailField(_("email address"), unique=True)
     username = None  # type: ignore[assignment]
-    
+
     # Timezone field for fasting app
     timezone = CharField(
-        _("Timezone"), 
-        max_length=50, 
-        default='UTC',
-        help_text=_("User's timezone for accurate fasting time tracking")
+        _("Timezone"),
+        max_length=50,
+        default="UTC",
+        help_text=_("User's timezone for accurate fasting time tracking"),
     )
 
     USERNAME_FIELD = "email"
