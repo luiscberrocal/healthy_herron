@@ -1,0 +1,14 @@
+{% comment %}
+HTMX fragment for timer updates - loaded every 15 seconds
+{% endcomment %}
+{% if active_fast %}
+  <p class="text-2xl font-bold text-blue-900">
+    {{ active_fast.elapsed_hours }}
+    {% include "components/loading.html" with id="timer-spinner" %}
+  </p>
+  <p class="text-sm text-blue-700">
+    {{ active_fast.elapsed_seconds }} seconds total
+  </p>
+{% else %}
+  <p class="text-lg text-gray-500">No active fast</p>
+{% endif %}

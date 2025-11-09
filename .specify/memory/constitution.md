@@ -1,10 +1,10 @@
 <!-- Sync Impact Report:
-Version change: 1.0.0 → 1.1.0 (API structure requirements added)
-Modified principles: Django Best Practices (expanded with API package structure and class-based view requirements)
-Added sections: None
+Version change: 1.1.0 → 1.2.0 (HTMX requirement added, JavaScript prohibited)
+Modified principles: Simple UX (expanded with HTMX requirement and JavaScript prohibition for interactive features)
+Added sections: Frontend Interaction Standards
 Removed sections: None
-Templates requiring updates: ✅ plan-template.md updated with API structure
-Follow-up TODOs: None
+Templates requiring updates: ✅ plan-template.md updated with HTMX constitution check, ✅ spec-template.md verified (no updates needed)
+Follow-up TODOs: Update existing projects to migrate from JavaScript to HTMX
 -->
 
 # Healthy Herron Constitution
@@ -15,7 +15,7 @@ Follow-up TODOs: None
 All code MUST be clean, readable, and maintainable. Functions and classes must have single responsibilities. Code must be self-documenting with meaningful names. Complex logic requires explanatory comments. Follow PEP 8 and use Ruff for linting. No dead code or commented-out code blocks in production branches.
 
 ### II. Simple UX
-User interfaces MUST prioritize simplicity and usability over feature complexity. Every user interaction should be intuitive and require minimal cognitive load. Navigation must be clear and consistent. Error messages must be helpful and actionable. Forms should validate input client-side where possible.
+User interfaces MUST prioritize simplicity and usability over feature complexity. Every user interaction should be intuitive and require minimal cognitive load. Navigation must be clear and consistent. Error messages must be helpful and actionable. Forms should validate input client-side where possible. All interactive features MUST use HTMX for dynamic behavior - JavaScript is prohibited except for HTMX integration. HTMX provides the necessary interactivity while maintaining simplicity and reducing client-side complexity.
 
 ### III. Responsive Design (NON-NEGOTIABLE)
 All user interfaces MUST be fully responsive across desktop, tablet, and mobile devices. Use Tailwind CSS for consistent styling. Test on multiple screen sizes during development. No horizontal scrolling on mobile devices. Touch targets must be appropriately sized for mobile interaction.
@@ -25,6 +25,16 @@ Prefer existing libraries from `pyproject.toml` over adding new dependencies. Ne
 
 ### V. Django Best Practices
 All Django apps MUST be created under the `healthy_herron` package. Models must inherit from both `core.models.AuditableModel` and `model_utils.models.TimeStampedModel`. Tests must be organized in a `tests` package within each app. Use class-based pytest tests exclusively. Create FactoryBoy factories for every model in the tests package. APIs must be organized in an `api` package within each app containing `urls.py`, `views.py`, and `serializers.py`. Use class-based views exclusively for both APIs and web pages.
+
+## Frontend Interaction Standards
+
+All dynamic user interactions must follow these patterns:
+
+- **HTMX Only**: Use HTMX for all interactive features (real-time updates, form submissions, content loading)
+- **No JavaScript**: Custom JavaScript is prohibited - all interactivity via HTMX attributes and server responses
+- **Progressive Enhancement**: Features must work without JavaScript, enhanced with HTMX
+- **Server-Side Rendering**: Dynamic content generated on server, returned as HTML fragments
+- **HTMX Integration**: Include HTMX library as the sole client-side dependency for interactivity
 
 ## Django Architecture Standards
 
@@ -59,4 +69,4 @@ Constitution amendments require:
 
 All development decisions must align with these principles. When in doubt, choose the simpler, more maintainable solution.
 
-**Version**: 1.1.0 | **Ratified**: 2025-10-25 | **Last Amended**: 2025-10-25
+**Version**: 1.2.0 | **Ratified**: 2025-10-25 | **Last Amended**: 2025-10-25

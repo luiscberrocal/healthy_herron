@@ -1,0 +1,107 @@
+/* Fasting Tracker CSS - Using Tailwind CSS classes per constitution */
+
+/* Custom animations for loading states */
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.pulse-slow {
+  animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Timer display enhancements */
+.timer-display {
+  @apply text-2xl font-bold text-blue-900 tabular-nums;
+}
+
+.timer-secondary {
+  @apply text-sm text-blue-700 tabular-nums;
+}
+
+/* Fast status indicators */
+.fast-active {
+  @apply bg-blue-50 border-blue-200 text-blue-900;
+}
+
+.fast-completed {
+  @apply bg-green-50 border-green-200 text-green-900;
+}
+
+/* Emotional status badges */
+.emotion-energized {
+  @apply bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium;
+}
+
+.emotion-satisfied {
+  @apply bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium;
+}
+
+.emotion-challenging {
+  @apply bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium;
+}
+
+.emotion-difficult {
+  @apply bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium;
+}
+
+/* HTMX loading state customizations */
+.htmx-indicator {
+  opacity: 0;
+  transition: opacity 0.2s ease-in;
+}
+
+.htmx-request .htmx-indicator {
+  opacity: 1;
+}
+
+.htmx-request.htmx-indicator {
+  opacity: 1;
+}
+
+/* Button loading states */
+.btn-loading {
+  @apply opacity-75 cursor-not-allowed;
+}
+
+.btn-loading .button-text {
+  @apply opacity-0;
+}
+
+/* Form field focus states */
+.form-input:focus {
+  @apply border-blue-500 ring-blue-500;
+}
+
+/* Dashboard grid responsiveness */
+.dashboard-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+}
+
+/* Fast card styling */
+.fast-card {
+  @apply bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200;
+}
+
+.fast-card-active {
+  @apply bg-blue-50 border-2 border-blue-200;
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 640px) {
+  .timer-display {
+    @apply text-xl;
+  }
+  
+  .dashboard-grid {
+    @apply grid-cols-1 gap-4;
+  }
+  
+  .fast-card {
+    @apply p-4;
+  }
+}

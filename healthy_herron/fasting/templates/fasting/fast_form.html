@@ -1,0 +1,167 @@
+{% extends "fasting/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Edit Fast" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
+    <div class="text-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-900 mb-2">{% trans "Edit Fast" %}</h1>
+        <p class="text-gray-600">{% trans "Update the details of your fasting period." %}</p>
+    </div>
+
+    <!-- Fast Information Banner -->
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+        <div class="flex items-center">
+            <div class="flex-shrink-0">
+                {% if object.is_active %}
+                    <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                {% else %}
+                    <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                {% endif %}
+            </div>
+            <div class="ml-3">
+                <h3 class="text-sm font-medium text-blue-800">
+                    {% if object.is_active %}
+                        {% trans "Active Fast" %}
+                    {% else %}
+                        {% trans "Completed Fast" %}
+                    {% endif %}
+                </h3>
+                <p class="text-sm text-blue-700">
+                    {% trans "Originally started:" %} {{ object.start_time|date:"M d, Y \a\t H:i" }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <form method="post" class="space-y-6">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    {% for error in form.non_field_errors %}
+                    <p class="text-sm text-red-700">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Start Time Field -->
+        <div>
+            <label for="{{ form.start_time.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                {% trans "Start Time" %} <span class="text-red-500">*</span>
+            </label>
+            {{ form.start_time }}
+            {% if form.start_time.errors %}
+                <div class="mt-1 text-sm text-red-600">
+                    {% for error in form.start_time.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <p class="mt-1 text-xs text-gray-500">{% trans "When did you start this fast?" %}</p>
+        </div>
+
+        <!-- End Time Field -->
+        <div>
+            <label for="{{ form.end_time.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                {% trans "End Time" %}
+            </label>
+            {{ form.end_time }}
+            {% if form.end_time.errors %}
+                <div class="mt-1 text-sm text-red-600">
+                    {% for error in form.end_time.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <p class="mt-1 text-xs text-gray-500">
+                {% trans "When did you end this fast? Leave empty if still ongoing." %}
+            </p>
+        </div>
+
+        <!-- Emotional Status Field -->
+        <div>
+            <label for="{{ form.emotional_status.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                {% trans "How were you feeling?" %}
+            </label>
+            {{ form.emotional_status }}
+            {% if form.emotional_status.errors %}
+                <div class="mt-1 text-sm text-red-600">
+                    {% for error in form.emotional_status.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <p class="mt-1 text-xs text-gray-500">{% trans "Required if you set an end time." %}</p>
+        </div>
+
+        <!-- Comments Field -->
+        <div>
+            <label for="{{ form.comments.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                {% trans "Comments" %}
+            </label>
+            {{ form.comments }}
+            {% if form.comments.errors %}
+                <div class="mt-1 text-sm text-red-600">
+                    {% for error in form.comments.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <p class="mt-1 text-xs text-gray-500">{% trans "Any thoughts or observations about this fast? (Optional)" %}</p>
+        </div>
+
+        <!-- Submit Buttons -->
+        <div class="flex space-x-3">
+            <button 
+                type="submit" 
+                class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200"
+            >
+                {% trans "Update Fast" %}
+            </button>
+            
+            <a 
+                href="{% url 'fasting:fast_detail' object.pk %}" 
+                class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-200 text-center"
+            >
+                {% trans "Cancel" %}
+            </a>
+        </div>
+    </form>
+
+    <!-- Danger Zone -->
+    <div class="mt-8 pt-6 border-t border-gray-200">
+        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+            <h3 class="text-lg font-medium text-red-900 mb-2">{% trans "Danger Zone" %}</h3>
+            <p class="text-sm text-red-700 mb-4">
+                {% trans "Deleting a fast will permanently remove all associated data. This action cannot be undone." %}
+            </p>
+            <a 
+                href="{% url 'fasting:fast_delete' object.pk %}" 
+                class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm"
+            >
+                {% trans "Delete Fast" %}
+            </a>
+        </div>
+    </div>
+
+    <!-- Loading indicator for HTMX requests -->
+    <div class="htmx-indicator">
+        {% include "components/loading.html" %}
+    </div>
+</div>
+{% endblock %}
