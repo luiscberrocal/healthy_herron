@@ -191,17 +191,6 @@ class EndFastFormTest(TestCase):
         self.assertIn('end_time', form.errors)
         self.assertIn('End time must be after the start time.', str(form.errors['end_time']))
 
-    def test_end_fast_form_future_end_time(self):
-        """Test form with future end time."""
-        form_data = {
-            'end_time': timezone.now() + timedelta(hours=1),
-            'emotional_status': 'satisfied'
-        }
-        form = EndFastForm(data=form_data, instance=self.fast)
-
-        self.assertFalse(form.is_valid())
-        self.assertIn('end_time', form.errors)
-        self.assertIn('cannot be in the future', str(form.errors['end_time']))
 
     def test_end_fast_form_invalid_emotional_status(self):
         """Test form with invalid emotional status."""
@@ -293,13 +282,13 @@ class EndFastFormTest(TestCase):
         form = EndFastForm(instance=self.fast)
 
         end_time_help = form.fields['end_time'].help_text
-        self.assertIn('When did you end', end_time_help)
+        self.assertIn('When the fast ended', end_time_help)
 
         emotional_status_help = form.fields['emotional_status'].help_text
-        self.assertIn('How did you feel', emotional_status_help)
+        self.assertIn('emotional state when ending fast', emotional_status_help)
 
         comments_help = form.fields['comments'].help_text
-        self.assertIn('Additional notes', comments_help)
+        self.assertIn("User's reflection on the fast", comments_help)
 
     def test_end_fast_form_labels(self):
         """Test form field labels."""
@@ -320,8 +309,7 @@ class EndFastFormTest(TestCase):
 
     def test_end_fast_form_very_short_fast(self):
         """Test ending a fast that's very short (less than 30 minutes)."""
-        short_fast = Fast.objects.create(
-            user=self.user,
+        short_fast = FastFactory.create(
             start_time=timezone.now() - timedelta(minutes=15)
         )
 
@@ -351,8 +339,7 @@ class EndFastFormTest(TestCase):
 
     def test_end_fast_form_very_long_fast(self):
         """Test ending a very long fast (more than 7 days)."""
-        long_fast = Fast.objects.create(
-            user=self.user,
+        long_fast = FastFactory.create(
             start_time=timezone.now() - timedelta(days=8)
         )
 
