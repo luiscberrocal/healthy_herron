@@ -4,7 +4,7 @@ from typing import Any
 from factory import Faker, post_generation
 from factory.django import DjangoModelFactory
 
-from healthy_herron.users.models import User
+from healthy_herron.users.models import Profile, User
 
 
 class UserFactory(DjangoModelFactory[User]):
@@ -37,3 +37,31 @@ class UserFactory(DjangoModelFactory[User]):
     class Meta:
         model = User
         django_get_or_create = ["email"]
+
+
+class ProfileFactory(DjangoModelFactory[Profile]):
+    """Factory for creating Profile instances."""
+
+    # Don't create a user automatically - use existing profile from signal or create manually
+    display_name = Faker("name")
+
+    class Meta:
+        model = Profile
+        exclude = ["user"]  # Don't auto-generate user field
+
+    @classmethod
+    def create(cls, **kwargs):
+        """Override create to handle user creation properly."""
+        if "user" not in kwargs:
+            # Create a user which will auto-create a profile via signal
+            user = UserFactory()
+            # Get the auto-created profile
+            profile = user.profile
+            # Update it with any provided fields
+            for key, value in kwargs.items():
+                if hasattr(profile, key):
+                    setattr(profile, key, value)
+            profile.save()
+            return profile
+        # User provided, create profile normally
+        return super().create(**kwargs)

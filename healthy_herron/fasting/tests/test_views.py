@@ -42,7 +42,8 @@ class DashboardViewTest(TestCase):
     def test_dashboard_with_active_fast(self):
         """Test dashboard when user has an active fast."""
         Fast.objects.create(
-            user=self.user, start_time=timezone.now() - timedelta(hours=5),
+            user=self.user,
+            start_time=timezone.now() - timedelta(hours=5),
         )
 
         self.client.force_login(self.user)
@@ -116,7 +117,8 @@ class StartFastViewTest(TestCase):
         """Test starting fast when user already has active fast."""
         # Create existing active fast
         Fast.objects.create(
-            user=self.user, start_time=timezone.now() - timedelta(hours=2),
+            user=self.user,
+            start_time=timezone.now() - timedelta(hours=2),
         )
 
         self.client.force_login(self.user)
@@ -157,7 +159,8 @@ class EndFastViewTest(TestCase):
     def test_end_fast_get_with_active_fast(self):
         """Test GET request to end fast with active fast."""
         Fast.objects.create(
-            user=self.user, start_time=timezone.now() - timedelta(hours=12),
+            user=self.user,
+            start_time=timezone.now() - timedelta(hours=12),
         )
 
         self.client.force_login(self.user)
@@ -172,7 +175,8 @@ class EndFastViewTest(TestCase):
         """Test successful fast completion."""
         url = reverse("fasting:end_fast")
         fast = Fast.objects.create(
-            user=self.user, start_time=timezone.now() - timedelta(hours=16),
+            user=self.user,
+            start_time=timezone.now() - timedelta(hours=16),
         )
 
         self.client.force_login(self.user)
@@ -201,7 +205,8 @@ class EndFastViewTest(TestCase):
     def test_end_fast_validation_error(self):
         """Test end fast with validation errors."""
         fast = Fast.objects.create(
-            user=self.user, start_time=timezone.now() - timedelta(hours=16),
+            user=self.user,
+            start_time=timezone.now() - timedelta(hours=16),
         )
 
         self.client.force_login(self.user)
@@ -324,7 +329,8 @@ class FastDetailViewTest(TestCase):
     def test_fast_detail_user_ownership(self):
         """Test that users can only view their own fasts."""
         other_user_fast = Fast.objects.create(
-            user=self.other_user, start_time=timezone.now(),
+            user=self.other_user,
+            start_time=timezone.now(),
         )
         url = reverse("fasting:fast_detail", kwargs={"pk": other_user_fast.pk})
 
@@ -398,7 +404,8 @@ class FastUpdateViewTest(TestCase):
     def test_fast_update_user_ownership(self):
         """Test that users can only update their own fasts."""
         other_user_fast = Fast.objects.create(
-            user=self.other_user, start_time=timezone.now(),
+            user=self.other_user,
+            start_time=timezone.now(),
         )
         url = reverse("fasting:fast_update", kwargs={"pk": other_user_fast.pk})
 
@@ -449,7 +456,8 @@ class FastUpdateViewTest(TestCase):
 
         # Should redirect to detail view
         self.assertRedirects(
-            response, reverse("fasting:fast_detail", kwargs={"pk": fast.pk}),
+            response,
+            reverse("fasting:fast_detail", kwargs={"pk": fast.pk}),
         )
 
         # Fast should be updated
@@ -478,7 +486,8 @@ class FastDeleteViewTest(TestCase):
     def test_fast_delete_user_ownership(self):
         """Test that users can only delete their own fasts."""
         other_user_fast = Fast.objects.create(
-            user=self.other_user, start_time=timezone.now(),
+            user=self.other_user,
+            start_time=timezone.now(),
         )
         url = reverse("fasting:fast_delete", kwargs={"pk": other_user_fast.pk})
 
@@ -615,7 +624,8 @@ class TimerUpdateViewTest(TestCase):
     def test_timer_update_with_active_fast(self):
         """Test timer update with active fast."""
         Fast.objects.create(
-            user=self.user, start_time=timezone.now() - timedelta(hours=5),
+            user=self.user,
+            start_time=timezone.now() - timedelta(hours=5),
         )
 
         self.client.force_login(self.user)
