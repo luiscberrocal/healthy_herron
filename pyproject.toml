@@ -172,7 +172,7 @@ dev = [
 
 [project]
 name = "healthy_herron"
-version = "0.2.1"
+version = "0.2.2"
 description = "Health tracking app."
 readme = "README.md"
 
