@@ -1,0 +1,62 @@
+openapi: 3.0.0
+info:
+  title: User Profile API
+  version: 1.0.0
+paths:
+  /api/users/profile/:
+    get:
+      summary: Get current user's profile
+      responses:
+        '200':
+          description: Profile data
+    post:
+      summary: Create or update current user's profile
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                display_name:
+                  type: string
+                avatar:
+                  type: string
+                  format: binary
+                configuration:
+                  type: object
+      responses:
+        '200':
+          description: Profile updated
+  /api/users/profile/configuration/:
+    post:
+      summary: Set configuration value
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                app_name:
+                  type: string
+                key:
+                  type: string
+                value:
+                  type: string
+      responses:
+        '200':
+          description: Configuration updated
+    delete:
+      summary: Delete configuration value
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                app_name:
+                  type: string
+                key:
+                  type: string
+      responses:
+        '204':
+          description: Configuration deleted
