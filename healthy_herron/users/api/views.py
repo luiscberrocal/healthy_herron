@@ -67,12 +67,15 @@ class ProfileViewSet(RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
 
             profile.set_configuration(app_name, key, value)
 
-            return Response({
-                "message": "Configuration updated successfully",
-                "app_name": app_name,
-                "key": key,
-                "value": value,
-            }, status=status.HTTP_200_OK)
+            return Response(
+                {
+                    "message": "Configuration updated successfully",
+                    "app_name": app_name,
+                    "key": key,
+                    "value": value,
+                },
+                status=status.HTTP_200_OK,
+            )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=["delete"])
@@ -90,7 +93,10 @@ class ProfileViewSet(RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
             if key:
                 message += f".{key}"
 
-            return Response({
-                "message": message,
-            }, status=status.HTTP_204_NO_CONTENT)
+            return Response(
+                {
+                    "message": message,
+                },
+                status=status.HTTP_204_NO_CONTENT,
+            )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

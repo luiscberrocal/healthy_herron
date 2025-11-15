@@ -79,7 +79,7 @@ def avatar_upload_path(instance, filename):
 
 class Profile(AuditableModel, TimeStampedModel):
     """User profile model with additional fields.
-    
+
     Automatically created when a User is created and deleted when User is deleted.
     """
 
@@ -153,7 +153,7 @@ class Profile(AuditableModel, TimeStampedModel):
 
     def set_configuration(self, app_name: str, key: str, value: any):
         """Set a configuration value for a specific app and key.
-        
+
         Args:
             app_name: Name of the app (e.g., 'fasting', 'nutrition')
             key: Configuration key within the app
@@ -168,9 +168,9 @@ class Profile(AuditableModel, TimeStampedModel):
         self.configuration[app_name][key] = value
         self.save()
 
-    def delete_configuration(self, app_name: str, key: str = None):
+    def delete_configuration(self, app_name: str, key: str | None = None):
         """Delete a configuration value or entire app configuration.
-        
+
         Args:
             app_name: Name of the app
             key: Specific key to delete. If None, deletes entire app configuration
@@ -191,14 +191,14 @@ class Profile(AuditableModel, TimeStampedModel):
 
         self.save()
 
-    def get_configuration(self, app_name: str, key: str = None, default=None):
+    def get_configuration(self, app_name: str, key: str | None = None, default=None):
         """Get a configuration value.
-        
+
         Args:
             app_name: Name of the app
             key: Specific key to get. If None, returns entire app configuration
             default: Default value if key/app not found
-            
+
         Returns:
             Configuration value or default
         """

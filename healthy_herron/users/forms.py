@@ -53,11 +53,15 @@ class ProfileForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["display_name"].widget.attrs.update({
-            "class": "form-control",
-            "placeholder": _("Enter your display name"),
-        })
-        self.fields["avatar"].widget.attrs.update({
-            "class": "form-control",
-            "accept": "image/jpeg,image/png",
-        })
+        self.fields["display_name"].widget.attrs.update(
+            {
+                "class": "form-control",
+                "placeholder": _("Enter your display name"),
+            },
+        )
+        self.fields["avatar"].widget.attrs.update(
+            {
+                "class": "form-control",
+                "accept": "image/jpeg,image/png",
+            },
+        )

@@ -140,7 +140,8 @@ class FastModelTest(TestCase):
     def test_end_fast_method(self):
         """Test the end_fast method."""
         fast = Fast.objects.create(
-            user=self.user, start_time=timezone.now() - timedelta(hours=12),
+            user=self.user,
+            start_time=timezone.now() - timedelta(hours=12),
         )
 
         fast.end_fast("energized", "Felt great!")
@@ -211,7 +212,8 @@ class FastModelTest(TestCase):
         """Test validation that user cannot have multiple active fasts."""
         # Create first active fast
         Fast.objects.create(
-            user=self.user, start_time=timezone.now() - timedelta(hours=2),
+            user=self.user,
+            start_time=timezone.now() - timedelta(hours=2),
         )
 
         # Try to create second active fast
@@ -226,7 +228,8 @@ class FastModelTest(TestCase):
 
         # Create active fast for first user
         Fast.objects.create(
-            user=self.user, start_time=timezone.now() - timedelta(hours=2),
+            user=self.user,
+            start_time=timezone.now() - timedelta(hours=2),
         )
 
         # Create active fast for second user - should be valid
@@ -294,7 +297,8 @@ class FastManagerTest(TestCase):
         # Create fasts for different users
         user_fast = Fast.objects.create(user=self.user, start_time=timezone.now())
         other_user_fast = Fast.objects.create(
-            user=self.other_user, start_time=timezone.now(),
+            user=self.other_user,
+            start_time=timezone.now(),
         )
 
         # Test filtering

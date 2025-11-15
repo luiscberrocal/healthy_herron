@@ -300,9 +300,13 @@ class TestProfile:
 
         # Test getting non-existent values
         assert profile.get_configuration("test_app", "missing_key") is None
-        assert profile.get_configuration("test_app", "missing_key", "default") == "default"
+        assert (
+            profile.get_configuration("test_app", "missing_key", "default") == "default"
+        )
         assert profile.get_configuration("missing_app", "any_key") is None
-        assert profile.get_configuration("missing_app", "any_key", "default") == "default"
+        assert (
+            profile.get_configuration("missing_app", "any_key", "default") == "default"
+        )
 
     @pytest.mark.django_db
     def test_delete_configuration(self):

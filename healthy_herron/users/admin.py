@@ -59,14 +59,23 @@ class ProfileAdmin(admin.ModelAdmin):
     readonly_fields = ("created_at", "updated_at", "created_by", "modified_by")
 
     fieldsets = (
-        (None, {
-            "fields": ("user", "display_name", "avatar"),
-        }),
-        (_("Configuration"), {
-            "fields": ("configuration",),
-        }),
-        (_("Audit Information"), {
-            "fields": ("created_by", "modified_by", "created_at", "updated_at"),
-            "classes": ("collapse",),
-        }),
+        (
+            None,
+            {
+                "fields": ("user", "display_name", "avatar"),
+            },
+        ),
+        (
+            _("Configuration"),
+            {
+                "fields": ("configuration",),
+            },
+        ),
+        (
+            _("Audit Information"),
+            {
+                "fields": ("created_by", "modified_by", "created_at", "updated_at"),
+                "classes": ("collapse",),
+            },
+        ),
     )
