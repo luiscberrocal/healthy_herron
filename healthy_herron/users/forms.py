@@ -1,10 +1,10 @@
 from allauth.account.forms import SignupForm
 from allauth.socialaccount.forms import SignupForm as SocialSignupForm
 from django.contrib.auth import forms as admin_forms
-from django.forms import EmailField
+from django.forms import EmailField, ModelForm
 from django.utils.translation import gettext_lazy as _
 
-from .models import User
+from .models import Profile, User
 
 
 class UserAdminChangeForm(admin_forms.UserChangeForm):
@@ -42,3 +42,22 @@ class UserSocialSignupForm(SocialSignupForm):
     Default fields will be added automatically.
     See UserSignupForm otherwise.
     """
+
+
+class ProfileForm(ModelForm):
+    """Form for editing user profile including avatar."""
+
+    class Meta:
+        model = Profile
+        fields = ["display_name", "avatar"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["display_name"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": _("Enter your display name"),
+        })
+        self.fields["avatar"].widget.attrs.update({
+            "class": "form-control",
+            "accept": "image/jpeg,image/png",
+        })

@@ -1,11 +1,12 @@
 from django.conf import settings
 from rest_framework.routers import DefaultRouter, SimpleRouter
 
-from healthy_herron.users.api.views import UserViewSet
+from healthy_herron.users.api.views import ProfileViewSet, UserViewSet
 
 router = DefaultRouter() if settings.DEBUG else SimpleRouter()
 
 router.register("users", UserViewSet)
+router.register("profile", ProfileViewSet, basename="profile")
 
 
 app_name = "api"
