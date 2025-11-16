@@ -173,7 +173,8 @@ class FastAdmin(admin.ModelAdmin):
 
         if updated_count:
             self.message_user(
-                request, f"Successfully marked {updated_count} fast(s) as completed.",
+                request,
+                f"Successfully marked {updated_count} fast(s) as completed.",
             )
         else:
             self.message_user(

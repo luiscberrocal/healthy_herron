@@ -134,7 +134,8 @@ class EndFastView(LoginRequiredMixin, UpdateView):
 
         except Fast.DoesNotExist:
             messages.error(
-                self.request, _("The fast you're trying to end no longer exists."),
+                self.request,
+                _("The fast you're trying to end no longer exists."),
             )
             return redirect("fasting:dashboard")
 
@@ -270,7 +271,8 @@ class FastUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
 
         except Fast.DoesNotExist:
             messages.error(
-                self.request, _("The fast you're trying to update no longer exists."),
+                self.request,
+                _("The fast you're trying to update no longer exists."),
             )
             return redirect("fasting:fast_list")
 

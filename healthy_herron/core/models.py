@@ -1,7 +1,5 @@
-from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.db import models
-
-User = get_user_model()
 
 
 class AuditableModel(models.Model):
@@ -13,19 +11,34 @@ class AuditableModel(models.Model):
     """
 
     created_by = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         related_name="%(class)s_created",
         on_delete=models.PROTECT,
         null=True,
         blank=True,
     )
     modified_by = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         related_name="%(class)s_modified",
         on_delete=models.PROTECT,
         null=True,
         blank=True,
     )
+
+    class Meta:
+        abstract = True
+
+
+class TimeStampedModel(models.Model):
+    """Abstract model that adds timestamp fields.
+
+    Attributes:
+        created_at (DateTimeField): When the instance was created.
+        updated_at (DateTimeField): When the instance was last updated.
+    """
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         abstract = True

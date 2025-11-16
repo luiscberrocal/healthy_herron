@@ -41,7 +41,8 @@ class FastFormTest(TestCase):
         """Test form when user already has an active fast."""
         # Create existing active fast
         Fast.objects.create(
-            user=self.user, start_time=timezone.now() - timedelta(hours=5),
+            user=self.user,
+            start_time=timezone.now() - timedelta(hours=5),
         )
 
         form_data = {"start_time": timezone.now() - timedelta(hours=1)}
@@ -111,7 +112,8 @@ class EndFastFormTest(TestCase):
         """Set up test data."""
         self.user = UserFactory()
         self.fast = Fast.objects.create(
-            user=self.user, start_time=timezone.now() - timedelta(hours=16),
+            user=self.user,
+            start_time=timezone.now() - timedelta(hours=16),
         )
 
     def test_end_fast_form_valid_data(self):
@@ -396,7 +398,8 @@ class FormIntegrationTest(TestCase):
         """Test that form validation is consistent with model validation."""
         # Create a fast with invalid data that should fail at both levels
         fast = Fast.objects.create(
-            user=self.user, start_time=timezone.now() - timedelta(hours=1),
+            user=self.user,
+            start_time=timezone.now() - timedelta(hours=1),
         )
 
         # Try to end with invalid end time

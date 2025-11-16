@@ -219,7 +219,9 @@ class SessionManager:
         if active_fast_id:
             try:
                 return Fast.objects.get(
-                    id=active_fast_id, user=request.user, end_time__isnull=True,
+                    id=active_fast_id,
+                    user=request.user,
+                    end_time__isnull=True,
                 )
             except Fast.DoesNotExist:
                 # Clear invalid session data
